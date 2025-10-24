@@ -1,0 +1,160 @@
+<script setup>
+import { ref } from 'vue'
+import { useDiveDataStore } from '@/stores/diveDataStore'
+import { parseUDDFFile } from '@/utils/uddfParser'
+
+const emit = defineEmits(['diveDataUploaded'])
+
+const diveDataStore = useDiveDataStore()
+const isDragging = ref(false)
+const fileName = ref('')
+
+async function handleFileSelect(event) {
+  const file = event.target.files[0]
+  if (file) {
+    await processFile(file)
+  }
+}
+
+async function handleFileDrop(event) {
+  isDragging.value = false
+  const file = event.dataTransfer.files[0]
+  if (file) {
+    await processFile(file)
+  }
+}
+
+async function processFile(file) {
+  // Validate file extension
+  if (!file.name.toLowerCase().endsWith('.uddf')) {
+    alert('請上傳 UDDF 格式檔案 (.uddf)')
+    return
+  }
+
+  fileName.value = file.name
+  diveDataStore.setLoading(true)
+
+  try {
+    const parsedData = await parseUDDFFile(file)
+    diveDataStore.setRawData(file)
+    diveDataStore.setParsedData(parsedData)
+    emit('diveDataUploaded', parsedData)
+  } catch (error) {
+    console.error('Error parsing UDDF file:', error)
+    diveDataStore.setError(error.message)
+    alert(`解析失敗: ${error.message}`)
+  } finally {
+    diveDataStore.setLoading(false)
+  }
+}
+
+function handleDragOver(event) {
+  event.preventDefault()
+  isDragging.value = true
+}
+
+function handleDragLeave() {
+  isDragging.value = false
+}
+</script>
+
+<template>
+  <v-card
+    class="upload-card"
+    :class="{ 'drag-over': isDragging }"
+    @dragover="handleDragOver"
+    @dragleave="handleDragLeave"
+    @drop.prevent="handleFileDrop"
+  >
+    <v-card-title>
+      <v-icon icon="mdi-file-chart" class="mr-2" />
+      上傳潛水記錄
+    </v-card-title>
+
+    <v-card-text>
+      <div class="upload-area text-center">
+        <v-icon icon="mdi-cloud-upload" size="64" color="primary" class="mb-4" />
+        
+        <p class="text-h6 mb-2">拖曳 UDDF 檔案到此處</p>
+        <p class="text-caption text-grey mb-4">或點擊下方按鈕選擇檔案</p>
+
+        <input
+          ref="fileInput"
+          type="file"
+          accept=".uddf"
+          style="display: none"
+          @change="handleFileSelect"
+        />
+
+        <v-btn
+          color="primary"
+          prepend-icon="mdi-file-upload"
+          @click="$refs.fileInput.click()"
+        >
+          選擇檔案
+        </v-btn>
+
+        <div v-if="diveDataStore.isLoading" class="mt-4">
+          <v-progress-circular indeterminate color="primary" />
+          <p class="text-caption mt-2">解析中...</p>
+        </div>
+
+        <div v-if="fileName && diveDataStore.hasDiveData" class="mt-4">
+          <v-alert type="success" variant="tonal">
+            <v-icon icon="mdi-check-circle" class="mr-2" />
+            已成功載入: {{ fileName }}
+          </v-alert>
+
+          <v-list density="compact" class="mt-2">
+            <v-list-item>
+              <template #prepend>
+                <v-icon icon="mdi-clock-outline" />
+              </template>
+              <v-list-item-title>潛水時長</v-list-item-title>
+              <v-list-item-subtitle>{{ diveDataStore.diveDuration }} 秒</v-list-item-subtitle>
+            </v-list-item>
+            <v-list-item>
+              <template #prepend>
+                <v-icon icon="mdi-arrow-down" />
+              </template>
+              <v-list-item-title>最大深度</v-list-item-title>
+              <v-list-item-subtitle>{{ diveDataStore.maxDepth.toFixed(1) }} 公尺</v-list-item-subtitle>
+            </v-list-item>
+            <v-list-item>
+              <template #prepend>
+                <v-icon icon="mdi-thermometer" />
+              </template>
+              <v-list-item-title>最低溫度</v-list-item-title>
+              <v-list-item-subtitle>{{ diveDataStore.minTemperature.toFixed(1) }} °C</v-list-item-subtitle>
+            </v-list-item>
+          </v-list>
+        </div>
+
+        <v-alert v-if="diveDataStore.error" type="error" class="mt-4" variant="tonal">
+          {{ diveDataStore.error }}
+        </v-alert>
+      </div>
+    </v-card-text>
+  </v-card>
+</template>
+
+<style scoped>
+.upload-card {
+  height: 100%;
+  transition: all 0.3s;
+}
+
+.upload-card.drag-over {
+  border: 2px dashed #1976D2;
+  background-color: rgba(25, 118, 210, 0.05);
+}
+
+.upload-area {
+  padding: 2rem;
+  min-height: 300px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+</style>
