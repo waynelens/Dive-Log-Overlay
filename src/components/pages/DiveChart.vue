@@ -1,5 +1,6 @@
 <script setup>
 import { ref, computed, watch, onMounted } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { Line } from 'vue-chartjs'
 import {
   Chart as ChartJS,
@@ -23,6 +24,8 @@ ChartJS.register(
   Legend,
   Filler
 )
+
+const { t } = useI18n()
 
 const props = defineProps({
   diveData: {
@@ -53,7 +56,7 @@ const chartData = computed(() => {
 
   if (showDepth.value) {
     datasets.push({
-      label: '深度 (m)',
+      label: t('chart.depthUnit'),
       data: waypoints.map((w) => w.depth),
       borderColor: '#1976D2',
       backgroundColor: 'rgba(25, 118, 210, 0.1)',
@@ -65,7 +68,7 @@ const chartData = computed(() => {
 
   if (showTemperature.value) {
     datasets.push({
-      label: '溫度 (°C)',
+      label: t('chart.temperatureUnit'),
       data: waypoints.map((w) => w.temperature),
       borderColor: '#FF5252',
       backgroundColor: 'rgba(255, 82, 82, 0.1)',
@@ -95,7 +98,7 @@ const chartOptions = computed(() => ({
     },
     title: {
       display: true,
-      text: '潛水數據圖表',
+      text: t('chart.chartTitle'),
     },
     tooltip: {
       callbacks: {
@@ -103,7 +106,7 @@ const chartOptions = computed(() => ({
           const seconds = context[0].label
           const minutes = Math.floor(seconds / 60)
           const secs = Math.floor(seconds % 60)
-          return `時間: ${minutes}:${secs.toString().padStart(2, '0')}`
+          return t('chart.tooltip.time', { time: `${minutes}:${secs.toString().padStart(2, '0')}` })
         },
       },
     },
@@ -112,7 +115,7 @@ const chartOptions = computed(() => ({
     x: {
       title: {
         display: true,
-        text: '潛水時間 (秒)',
+        text: t('chart.diveTime'),
       },
     },
     y: {
@@ -121,7 +124,7 @@ const chartOptions = computed(() => ({
       position: 'left',
       title: {
         display: true,
-        text: '深度 (m)',
+        text: t('chart.depthUnit'),
       },
       reverse: true, // Depth increases downward
     },
@@ -131,7 +134,7 @@ const chartOptions = computed(() => ({
       position: 'right',
       title: {
         display: true,
-        text: '溫度 (°C)',
+        text: t('chart.temperatureUnit'),
       },
       grid: {
         drawOnChartArea: false,
@@ -152,7 +155,7 @@ const chartOptions = computed(() => ({
   <v-card>
     <v-card-title>
       <v-icon icon="mdi-chart-line" class="mr-2" />
-      數據可視化
+      {{ t('chart.title') }}
     </v-card-title>
 
     <v-card-text>
@@ -164,14 +167,14 @@ const chartOptions = computed(() => ({
               @click="showDepth = !showDepth"
             >
               <v-icon icon="mdi-arrow-down" class="mr-1" />
-              深度
+              {{ t('chart.depth') }}
             </v-chip>
             <v-chip
               :color="showTemperature ? 'error' : 'default'"
               @click="showTemperature = !showTemperature"
             >
               <v-icon icon="mdi-thermometer" class="mr-1" />
-              溫度
+              {{ t('chart.temperature') }}
             </v-chip>
           </v-chip-group>
         </v-col>
@@ -181,7 +184,7 @@ const chartOptions = computed(() => ({
         <Line v-if="chartData" :data="chartData" :options="chartOptions" />
         <div v-else class="text-center pa-8">
           <v-icon icon="mdi-chart-line-variant" size="64" color="grey" />
-          <p class="text-grey mt-4">無數據可顯示</p>
+          <p class="text-grey mt-4">{{ t('chart.noData') }}</p>
         </div>
       </div>
     </v-card-text>

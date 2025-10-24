@@ -1,0 +1,108 @@
+{
+  "app": {
+    "title": "潛水記錄疊加工具"
+  },
+  "nav": {
+    "upload": "檔案上傳",
+    "workspace": "工作區"
+  },
+  "header": {
+    "title": "潛水記錄疊加工具"
+  },
+  "footer": {
+    "copyright": "{year} — Dive Log Overlay Tool",
+    "description": "使用 Vue 3 + Vuetify 建構 | 支援 UDDF 格式潛水記錄",
+    "links": {
+      "guide": "使用說明",
+      "github": "GitHub",
+      "about": "關於"
+    }
+  },
+  "upload": {
+    "title": "檔案上傳",
+    "description": "請先上傳潛水記錄（UDDF 格式）和影片檔案，然後進入工作區進行時間軸對齊與疊加處理",
+    "diveLog": {
+      "title": "上傳潛水記錄",
+      "dragText": "拖曳 UDDF 檔案到此處",
+      "selectText": "或點擊下方按鈕選擇檔案",
+      "selectButton": "選擇檔案",
+      "parsing": "解析中...",
+      "success": "已成功載入: {filename}",
+      "error": "請上傳 UDDF 格式檔案 (.uddf)",
+      "parseError": "解析失敗: {error}",
+      "stats": {
+        "duration": "潛水時長",
+        "maxDepth": "最大深度",
+        "minTemp": "最低溫度",
+        "seconds": "秒",
+        "meters": "公尺",
+        "celsius": "°C"
+      }
+    },
+    "video": {
+      "title": "上傳影片",
+      "dragText": "拖曳影片檔案到此處",
+      "formats": "支援格式: MP4, MOV, AVI, MKV",
+      "selectButton": "選擇影片",
+      "loading": "載入中...",
+      "success": "已成功載入: {filename}",
+      "error": "請上傳支援的影片格式 (MP4, MOV, AVI, MKV)",
+      "loadError": "載入失敗: {error}"
+    }
+  },
+  "workspace": {
+    "title": "工作區",
+    "description": "在此處查看潛水數據圖表、播放影片並進行時間軸同步設定",
+    "warning": {
+      "title": "請先上傳檔案",
+      "description": "請先在「檔案上傳」頁面上傳潛水記錄（UDDF 格式）和影片檔案後，再回到此工作區進行操作"
+    },
+    "export": {
+      "button": "準備匯出影片",
+      "hint": "請先調整時間軸同步設定後再進行匯出"
+    }
+  },
+  "chart": {
+    "title": "數據可視化",
+    "chartTitle": "潛水數據圖表",
+    "depth": "深度",
+    "temperature": "溫度",
+    "noData": "無數據可顯示",
+    "time": "時間",
+    "diveTime": "潛水時間 (秒)",
+    "depthUnit": "深度 (m)",
+    "temperatureUnit": "溫度 (°C)",
+    "tooltip": {
+      "time": "時間: {time}"
+    }
+  },
+  "video": {
+    "title": "影片播放器",
+    "seconds": "秒",
+    "noVideo": "請先上傳影片檔案"
+  },
+  "sync": {
+    "title": "時間軸同步",
+    "offset": "時間軸偏移量（秒）",
+    "currentTime": "當前時間",
+    "info": {
+      "title": "同步資訊",
+      "reset": "重置",
+      "videoDuration": "影片長度",
+      "diveDuration": "潛水記錄長度",
+      "timeOffset": "時間偏移",
+      "diveEndTime": "潛水結束時間"
+    },
+    "hint": "拖動「時間軸偏移量」滑桿來調整影片與潛水記錄的起始點對齊",
+    "noData": "請先上傳潛水記錄和影片"
+  },
+  "common": {
+    "loading": "載入中...",
+    "error": "錯誤",
+    "success": "成功",
+    "cancel": "取消",
+    "confirm": "確認",
+    "save": "儲存",
+    "close": "關閉"
+  }
+}

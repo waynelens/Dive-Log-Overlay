@@ -1,10 +1,12 @@
 <script setup>
 import { ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 import HeaderBar from './components/common/HeaderBar.vue'
 import FooterBar from './components/common/FooterBar.vue'
 import UploadSection from './components/pages/UploadSection.vue'
 import Workspace from './components/pages/Workspace.vue'
 
+const { t } = useI18n()
 const currentTab = ref('upload')
 
 function handleDiveDataUploaded(data) {
@@ -25,11 +27,11 @@ function handleVideoUploaded(file) {
         <v-tabs v-model="currentTab" color="primary" align-tabs="center">
           <v-tab value="upload">
             <v-icon icon="mdi-upload" class="mr-2" />
-            檔案上傳
+            {{ t('nav.upload') }}
           </v-tab>
           <v-tab value="workspace">
             <v-icon icon="mdi-view-dashboard" class="mr-2" />
-            工作區
+            {{ t('nav.workspace') }}
           </v-tab>
         </v-tabs>
 

@@ -1,7 +1,9 @@
 <script setup>
 import { ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { useVideoStore } from '@/stores/videoStore'
 
+const { t } = useI18n()
 const emit = defineEmits(['videoUploaded'])
 
 const videoStore = useVideoStore()
@@ -28,7 +30,7 @@ function handleFileDrop(event) {
 function processFile(file) {
   // Validate file type
   if (!acceptedFormats.includes(file.type)) {
-    alert('請上傳支援的影片格式 (MP4, MOV, AVI, MKV)')
+    alert(t('upload.video.error'))
     return
   }
 
@@ -41,7 +43,7 @@ function processFile(file) {
   } catch (error) {
     console.error('Error loading video:', error)
     videoStore.setError(error.message)
-    alert(`載入失敗: ${error.message}`)
+    alert(t('upload.video.loadError', { error: error.message }))
   } finally {
     videoStore.setLoading(false)
   }
@@ -67,15 +69,15 @@ function handleDragLeave() {
   >
     <v-card-title>
       <v-icon icon="mdi-video" class="mr-2" />
-      上傳影片
+      {{ t('upload.video.title') }}
     </v-card-title>
 
     <v-card-text>
       <div class="upload-area text-center">
         <v-icon icon="mdi-video-plus" size="64" color="primary" class="mb-4" />
         
-        <p class="text-h6 mb-2">拖曳影片檔案到此處</p>
-        <p class="text-caption text-grey mb-4">支援格式: MP4, MOV, AVI, MKV</p>
+        <p class="text-h6 mb-2">{{ t('upload.video.dragText') }}</p>
+        <p class="text-caption text-grey mb-4">{{ t('upload.video.formats') }}</p>
 
         <input
           ref="fileInput"
@@ -90,18 +92,18 @@ function handleDragLeave() {
           prepend-icon="mdi-video-box"
           @click="$refs.fileInput.click()"
         >
-          選擇影片
+          {{ t('upload.video.selectButton') }}
         </v-btn>
 
         <div v-if="videoStore.isLoading" class="mt-4">
           <v-progress-circular indeterminate color="primary" />
-          <p class="text-caption mt-2">載入中...</p>
+          <p class="text-caption mt-2">{{ t('upload.video.loading') }}</p>
         </div>
 
         <div v-if="fileName && videoStore.hasVideo" class="mt-4">
           <v-alert type="success" variant="tonal">
             <v-icon icon="mdi-check-circle" class="mr-2" />
-            已成功載入: {{ fileName }}
+            {{ t('upload.video.success', { filename: fileName }) }}
           </v-alert>
 
           <div v-if="videoStore.videoUrl" class="mt-4">

@@ -1,5 +1,8 @@
 <script setup>
 import { ref, watch, onMounted, onBeforeUnmount } from 'vue'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 const props = defineProps({
   videoFile: {
@@ -96,7 +99,7 @@ defineExpose({
   <v-card>
     <v-card-title>
       <v-icon icon="mdi-play-circle" class="mr-2" />
-      影片播放器
+      {{ t('video.title') }}
     </v-card-title>
 
     <v-card-text>
@@ -135,7 +138,7 @@ defineExpose({
             </v-col>
             <v-col cols="auto">
               <span class="text-caption">
-                {{ Math.floor(currentTime) }} / {{ Math.floor(duration) }} 秒
+                {{ Math.floor(currentTime) }} / {{ Math.floor(duration) }} {{ t('video.seconds') }}
               </span>
             </v-col>
           </v-row>
@@ -144,7 +147,7 @@ defineExpose({
 
       <div v-else class="no-video text-center pa-8">
         <v-icon icon="mdi-video-off" size="64" color="grey" />
-        <p class="text-grey mt-4">請先上傳影片檔案</p>
+        <p class="text-grey mt-4">{{ t('video.noVideo') }}</p>
       </div>
     </v-card-text>
   </v-card>

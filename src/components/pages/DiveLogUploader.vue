@@ -1,8 +1,10 @@
 <script setup>
 import { ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { useDiveDataStore } from '@/stores/diveDataStore'
 import { parseUDDFFile } from '@/utils/uddfParser'
 
+const { t } = useI18n()
 const emit = defineEmits(['diveDataUploaded'])
 
 const diveDataStore = useDiveDataStore()
@@ -27,7 +29,7 @@ async function handleFileDrop(event) {
 async function processFile(file) {
   // Validate file extension
   if (!file.name.toLowerCase().endsWith('.uddf')) {
-    alert('請上傳 UDDF 格式檔案 (.uddf)')
+    alert(t('upload.diveLog.error'))
     return
   }
 
@@ -42,7 +44,7 @@ async function processFile(file) {
   } catch (error) {
     console.error('Error parsing UDDF file:', error)
     diveDataStore.setError(error.message)
-    alert(`解析失敗: ${error.message}`)
+    alert(t('upload.diveLog.parseError', { error: error.message }))
   } finally {
     diveDataStore.setLoading(false)
   }
@@ -68,15 +70,15 @@ function handleDragLeave() {
   >
     <v-card-title>
       <v-icon icon="mdi-file-chart" class="mr-2" />
-      上傳潛水記錄
+      {{ t('upload.diveLog.title') }}
     </v-card-title>
 
     <v-card-text>
       <div class="upload-area text-center">
         <v-icon icon="mdi-cloud-upload" size="64" color="primary" class="mb-4" />
         
-        <p class="text-h6 mb-2">拖曳 UDDF 檔案到此處</p>
-        <p class="text-caption text-grey mb-4">或點擊下方按鈕選擇檔案</p>
+        <p class="text-h6 mb-2">{{ t('upload.diveLog.dragText') }}</p>
+        <p class="text-caption text-grey mb-4">{{ t('upload.diveLog.selectText') }}</p>
 
         <input
           ref="fileInput"
@@ -91,18 +93,18 @@ function handleDragLeave() {
           prepend-icon="mdi-file-upload"
           @click="$refs.fileInput.click()"
         >
-          選擇檔案
+          {{ t('upload.diveLog.selectButton') }}
         </v-btn>
 
         <div v-if="diveDataStore.isLoading" class="mt-4">
           <v-progress-circular indeterminate color="primary" />
-          <p class="text-caption mt-2">解析中...</p>
+          <p class="text-caption mt-2">{{ t('upload.diveLog.parsing') }}</p>
         </div>
 
         <div v-if="fileName && diveDataStore.hasDiveData" class="mt-4">
           <v-alert type="success" variant="tonal">
             <v-icon icon="mdi-check-circle" class="mr-2" />
-            已成功載入: {{ fileName }}
+            {{ t('upload.diveLog.success', { filename: fileName }) }}
           </v-alert>
 
           <v-list density="compact" class="mt-2">
@@ -110,22 +112,22 @@ function handleDragLeave() {
               <template #prepend>
                 <v-icon icon="mdi-clock-outline" />
               </template>
-              <v-list-item-title>潛水時長</v-list-item-title>
-              <v-list-item-subtitle>{{ diveDataStore.diveDuration }} 秒</v-list-item-subtitle>
+              <v-list-item-title>{{ t('upload.diveLog.stats.duration') }}</v-list-item-title>
+              <v-list-item-subtitle>{{ diveDataStore.diveDuration }} {{ t('upload.diveLog.stats.seconds') }}</v-list-item-subtitle>
             </v-list-item>
             <v-list-item>
               <template #prepend>
                 <v-icon icon="mdi-arrow-down" />
               </template>
-              <v-list-item-title>最大深度</v-list-item-title>
-              <v-list-item-subtitle>{{ diveDataStore.maxDepth.toFixed(1) }} 公尺</v-list-item-subtitle>
+              <v-list-item-title>{{ t('upload.diveLog.stats.maxDepth') }}</v-list-item-title>
+              <v-list-item-subtitle>{{ diveDataStore.maxDepth.toFixed(1) }} {{ t('upload.diveLog.stats.meters') }}</v-list-item-subtitle>
             </v-list-item>
             <v-list-item>
               <template #prepend>
                 <v-icon icon="mdi-thermometer" />
               </template>
-              <v-list-item-title>最低溫度</v-list-item-title>
-              <v-list-item-subtitle>{{ diveDataStore.minTemperature.toFixed(1) }} °C</v-list-item-subtitle>
+              <v-list-item-title>{{ t('upload.diveLog.stats.minTemp') }}</v-list-item-title>
+              <v-list-item-subtitle>{{ diveDataStore.minTemperature.toFixed(1) }} {{ t('upload.diveLog.stats.celsius') }}</v-list-item-subtitle>
             </v-list-item>
           </v-list>
         </div>

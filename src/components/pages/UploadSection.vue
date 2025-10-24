@@ -1,7 +1,9 @@
 <script setup>
+import { useI18n } from 'vue-i18n'
 import DiveLogUploader from './DiveLogUploader.vue'
 import VideoUploader from './VideoUploader.vue'
 
+const { t } = useI18n()
 const emit = defineEmits(['diveDataUploaded', 'videoUploaded'])
 
 function handleDiveDataUploaded(data) {
@@ -19,10 +21,10 @@ function handleVideoUploaded(file) {
       <v-col cols="12">
         <h2 class="text-h4 mb-2">
           <v-icon icon="mdi-upload" class="mr-2" />
-          檔案上傳
+          {{ t('upload.title') }}
         </h2>
         <p class="text-body-1 text-grey mb-6">
-          請先上傳潛水記錄（UDDF 格式）和影片檔案，然後進入工作區進行時間軸對齊與疊加處理
+          {{ t('upload.description') }}
         </p>
       </v-col>
     </v-row>

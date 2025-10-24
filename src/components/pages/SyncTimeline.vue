@@ -1,5 +1,8 @@
 <script setup>
 import { ref, computed, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 const props = defineProps({
   diveData: {
@@ -56,14 +59,14 @@ function resetSync() {
   <v-card>
     <v-card-title>
       <v-icon icon="mdi-timeline-clock" class="mr-2" />
-      時間軸同步
+      {{ t('sync.title') }}
     </v-card-title>
 
     <v-card-text>
       <div v-if="diveData && videoDuration > 0">
         <v-row class="mb-4">
           <v-col cols="12">
-            <div class="text-subtitle-2 mb-2">時間軸偏移量（秒）</div>
+            <div class="text-subtitle-2 mb-2">{{ t('sync.offset') }}</div>
             <v-slider
               v-model="timeOffset"
               :min="-videoDuration"
@@ -80,7 +83,7 @@ function resetSync() {
                   style="width: 100px"
                   density="compact"
                   hide-details
-                  suffix="秒"
+                  :suffix="t('video.seconds')"
                 />
               </template>
             </v-slider>
@@ -89,7 +92,7 @@ function resetSync() {
 
         <v-row class="mb-4">
           <v-col cols="12">
-            <div class="text-subtitle-2 mb-2">當前時間</div>
+            <div class="text-subtitle-2 mb-2">{{ t('sync.currentTime') }}</div>
             <v-slider
               v-model="currentTime"
               :min="0"
@@ -111,7 +114,7 @@ function resetSync() {
               <div class="d-flex justify-space-between align-center mb-2">
                 <div>
                   <v-icon icon="mdi-information" class="mr-2" />
-                  <span class="font-weight-bold">同步資訊</span>
+                  <span class="font-weight-bold">{{ t('sync.info.title') }}</span>
                 </div>
                 <v-btn
                   variant="outlined"
@@ -119,7 +122,7 @@ function resetSync() {
                   prepend-icon="mdi-refresh"
                   @click="resetSync"
                 >
-                  重置
+                  {{ t('sync.info.reset') }}
                 </v-btn>
               </div>
               
@@ -127,19 +130,19 @@ function resetSync() {
               
               <v-row dense>
                 <v-col cols="6">
-                  <div class="text-caption text-grey">影片長度</div>
+                  <div class="text-caption text-grey">{{ t('sync.info.videoDuration') }}</div>
                   <div class="text-body-2">{{ formatTime(videoDuration) }}</div>
                 </v-col>
                 <v-col cols="6">
-                  <div class="text-caption text-grey">潛水記錄長度</div>
+                  <div class="text-caption text-grey">{{ t('sync.info.diveDuration') }}</div>
                   <div class="text-body-2">{{ formatTime(diveData.diveDuration) }}</div>
                 </v-col>
                 <v-col cols="6">
-                  <div class="text-caption text-grey">時間偏移</div>
-                  <div class="text-body-2">{{ timeOffset.toFixed(1) }} 秒</div>
+                  <div class="text-caption text-grey">{{ t('sync.info.timeOffset') }}</div>
+                  <div class="text-body-2">{{ timeOffset.toFixed(1) }} {{ t('video.seconds') }}</div>
                 </v-col>
                 <v-col cols="6">
-                  <div class="text-caption text-grey">潛水結束時間</div>
+                  <div class="text-caption text-grey">{{ t('sync.info.diveEndTime') }}</div>
                   <div class="text-body-2">{{ formatTime(diveEndTime + timeOffset) }}</div>
                 </v-col>
               </v-row>
@@ -149,13 +152,13 @@ function resetSync() {
 
         <v-alert type="info" variant="tonal" class="mt-4">
           <v-icon icon="mdi-lightbulb-on" class="mr-2" />
-          拖動「時間軸偏移量」滑桿來調整影片與潛水記錄的起始點對齊
+          {{ t('sync.hint') }}
         </v-alert>
       </div>
 
       <div v-else class="text-center pa-8">
         <v-icon icon="mdi-timeline-alert" size="64" color="grey" />
-        <p class="text-grey mt-4">請先上傳潛水記錄和影片</p>
+        <p class="text-grey mt-4">{{ t('sync.noData') }}</p>
       </div>
     </v-card-text>
   </v-card>

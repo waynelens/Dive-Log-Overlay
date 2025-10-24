@@ -1,0 +1,108 @@
+{
+  "app": {
+    "title": "Dive Log Overlay Tool"
+  },
+  "nav": {
+    "upload": "Upload Files",
+    "workspace": "Workspace"
+  },
+  "header": {
+    "title": "Dive Log Overlay Tool"
+  },
+  "footer": {
+    "copyright": "{year} — Dive Log Overlay Tool",
+    "description": "Built with Vue 3 + Vuetify | Supports UDDF Format Dive Logs",
+    "links": {
+      "guide": "User Guide",
+      "github": "GitHub",
+      "about": "About"
+    }
+  },
+  "upload": {
+    "title": "Upload Files",
+    "description": "Please upload your dive log (UDDF format) and video file first, then proceed to the workspace for timeline alignment and overlay processing",
+    "diveLog": {
+      "title": "Upload Dive Log",
+      "dragText": "Drag UDDF file here",
+      "selectText": "or click the button below to select file",
+      "selectButton": "Select File",
+      "parsing": "Parsing...",
+      "success": "Successfully loaded: {filename}",
+      "error": "Please upload a UDDF format file (.uddf)",
+      "parseError": "Parse failed: {error}",
+      "stats": {
+        "duration": "Dive Duration",
+        "maxDepth": "Max Depth",
+        "minTemp": "Min Temperature",
+        "seconds": "seconds",
+        "meters": "meters",
+        "celsius": "°C"
+      }
+    },
+    "video": {
+      "title": "Upload Video",
+      "dragText": "Drag video file here",
+      "formats": "Supported formats: MP4, MOV, AVI, MKV",
+      "selectButton": "Select Video",
+      "loading": "Loading...",
+      "success": "Successfully loaded: {filename}",
+      "error": "Please upload a supported video format (MP4, MOV, AVI, MKV)",
+      "loadError": "Load failed: {error}"
+    }
+  },
+  "workspace": {
+    "title": "Workspace",
+    "description": "View dive data charts, play videos, and adjust timeline synchronization settings here",
+    "warning": {
+      "title": "Please Upload Files First",
+      "description": "Please upload your dive log (UDDF format) and video file on the 'Upload Files' page first, then return to this workspace"
+    },
+    "export": {
+      "button": "Prepare to Export Video",
+      "hint": "Please adjust timeline synchronization settings before exporting"
+    }
+  },
+  "chart": {
+    "title": "Data Visualization",
+    "chartTitle": "Dive Data Chart",
+    "depth": "Depth",
+    "temperature": "Temperature",
+    "noData": "No data to display",
+    "time": "Time",
+    "diveTime": "Dive Time (seconds)",
+    "depthUnit": "Depth (m)",
+    "temperatureUnit": "Temperature (°C)",
+    "tooltip": {
+      "time": "Time: {time}"
+    }
+  },
+  "video": {
+    "title": "Video Player",
+    "seconds": "seconds",
+    "noVideo": "Please upload a video file first"
+  },
+  "sync": {
+    "title": "Timeline Synchronization",
+    "offset": "Timeline Offset (seconds)",
+    "currentTime": "Current Time",
+    "info": {
+      "title": "Sync Info",
+      "reset": "Reset",
+      "videoDuration": "Video Duration",
+      "diveDuration": "Dive Log Duration",
+      "timeOffset": "Time Offset",
+      "diveEndTime": "Dive End Time"
+    },
+    "hint": "Drag the 'Timeline Offset' slider to align the video start point with the dive log",
+    "noData": "Please upload dive log and video first"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "save": "Save",
+    "close": "Close"
+  }
+}

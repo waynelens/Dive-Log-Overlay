@@ -1,5 +1,15 @@
 <script setup>
+import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 const currentYear = new Date().getFullYear()
+
+const links = computed(() => [
+  { name: t('footer.links.guide'), url: '#' },
+  { name: t('footer.links.github'), url: 'https://github.com/waynelens/Dive-Log-Overlay' },
+  { name: t('footer.links.about'), url: '#' },
+])
 </script>
 
 <template>
@@ -20,27 +30,13 @@ const currentYear = new Date().getFullYear()
     <v-divider class="my-4" />
 
     <div class="pb-4">
-      {{ currentYear }} — <strong>Dive Log Overlay Tool</strong>
+      {{ t('footer.copyright', { year: currentYear }) }}
       <div class="text-caption text-grey">
-        使用 Vue 3 + Vuetify 建構 | 支援 UDDF 格式潛水記錄
+        {{ t('footer.description') }}
       </div>
     </div>
   </v-footer>
 </template>
-
-<script>
-export default {
-  data() {
-    return {
-      links: [
-        { name: '使用說明', url: '#' },
-        { name: 'GitHub', url: 'https://github.com' },
-        { name: '關於', url: '#' },
-      ],
-    }
-  },
-}
-</script>
 
 <style scoped>
 </style>

@@ -1,5 +1,6 @@
 <script setup>
 import { ref, computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { useDiveDataStore } from '@/stores/diveDataStore'
 import { useVideoStore } from '@/stores/videoStore'
 import { useSyncStore } from '@/stores/syncStore'
@@ -7,6 +8,7 @@ import DiveChart from './DiveChart.vue'
 import VideoPlayer from './VideoPlayer.vue'
 import SyncTimeline from './SyncTimeline.vue'
 
+const { t } = useI18n()
 const diveDataStore = useDiveDataStore()
 const videoStore = useVideoStore()
 const syncStore = useSyncStore()
@@ -44,10 +46,10 @@ function handleTimeChanged(time) {
       <v-col cols="12">
         <h2 class="text-h4 mb-2">
           <v-icon icon="mdi-view-dashboard" class="mr-2" />
-          工作區
+          {{ t('workspace.title') }}
         </h2>
         <p class="text-body-1 text-grey mb-6">
-          在此處查看潛水數據圖表、播放影片並進行時間軸同步設定
+          {{ t('workspace.description') }}
         </p>
       </v-col>
     </v-row>
@@ -55,9 +57,9 @@ function handleTimeChanged(time) {
     <div v-if="!canWork">
       <v-alert type="warning" variant="tonal" prominent>
         <v-icon icon="mdi-alert" class="mr-2" />
-        <strong>請先上傳檔案</strong>
+        <strong>{{ t('workspace.warning.title') }}</strong>
         <div class="mt-2">
-          請先在「檔案上傳」頁面上傳潛水記錄（UDDF 格式）和影片檔案後，再回到此工作區進行操作
+          {{ t('workspace.warning.description') }}
         </div>
       </v-alert>
     </div>
@@ -103,10 +105,10 @@ function handleTimeChanged(time) {
                 prepend-icon="mdi-export"
                 :disabled="!syncStore.isSynced"
               >
-                準備匯出影片
+                {{ t('workspace.export.button') }}
               </v-btn>
               <p class="text-caption text-grey mt-2">
-                請先調整時間軸同步設定後再進行匯出
+                {{ t('workspace.export.hint') }}
               </p>
             </v-card-text>
           </v-card>
