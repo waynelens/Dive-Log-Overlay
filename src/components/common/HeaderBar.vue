@@ -2,6 +2,7 @@
 import { useI18n } from 'vue-i18n'
 import { setLocale, getCurrentLocale } from '@/plugins/i18n'
 import { ref } from 'vue'
+import icon from '@/assets/icon.png'
 
 const { t } = useI18n()
 const currentLocale = ref(getCurrentLocale())
@@ -11,17 +12,24 @@ function changeLocale(locale) {
   currentLocale.value = locale
 }
 
-// ensure public assets work when deployed to a subpath
-const base = import.meta.env.BASE_URL || '/' 
-
 </script>
 
 <template>
   <v-app-bar prominent flat elevation="0" class="app-bar-borders">
-    <v-app-bar-title>
-  <v-img :src="base + 'icon2.png'" max-width="32" max-height="32" class="mr-2 d-inline-block" style="vertical-align: middle;" />
-      Dive Log Overlay Tool
-    </v-app-bar-title>
+
+    <v-row class="align-center no-gutters">
+    <v-col cols="auto">
+      <v-img
+        :src="icon"
+        width="32"
+        height="32"
+        class="ml-3"
+      />
+    </v-col>
+    <v-col cols="auto" class="pl-0">
+      <span>Dive Log Overlay Tool</span>
+    </v-col>
+  </v-row>
 
     <template #append>
       <v-menu>
