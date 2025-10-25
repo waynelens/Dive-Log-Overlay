@@ -10,13 +10,17 @@ function changeLocale(locale) {
   setLocale(locale)
   currentLocale.value = locale
 }
+
+// ensure public assets work when deployed to a subpath
+const base = import.meta.env.BASE_URL || '/' 
+
 </script>
 
 <template>
-  <v-app-bar color="primary" prominent>
+  <v-app-bar prominent flat elevation="0" class="app-bar-borders">
     <v-app-bar-title>
-      <v-icon icon="mdi-diving-scuba-flag" class="mr-2" />
-      {{ t('header.title') }}
+  <v-img :src="base + 'icon2.png'" max-width="32" max-height="32" class="mr-2 d-inline-block" style="vertical-align: middle;" />
+      Dive Log Overlay Tool
     </v-app-bar-title>
 
     <template #append>
@@ -39,4 +43,9 @@ function changeLocale(locale) {
 </template>
 
 <style scoped>
+/* light top and bottom border for app bar */
+.app-bar-borders {
+  border-top: 1px solid rgba(0,0,0,0.08);
+  border-bottom: 1px solid rgba(0,0,0,0.08);
+}
 </style>
