@@ -13,16 +13,9 @@ const links = computed(() => [
 </script>
 
 <template>
-  <v-footer color="grey-lighten-4" class="text-center d-flex flex-column">
+  <v-footer class="text-center d-flex flex-column">
     <div class="pt-4">
-      <v-btn
-        v-for="link in links"
-        :key="link.name"
-        class="mx-2"
-        variant="text"
-        :href="link.url"
-        target="_blank"
-      >
+      <v-btn v-for="link in links" :key="link.name" class="mx-2" variant="text" :href="link.url" target="_blank">
         {{ link.name }}
       </v-btn>
     </div>
@@ -31,12 +24,11 @@ const links = computed(() => [
 
     <div class="pb-4">
       {{ t('footer.copyright', { year: currentYear }) }}
-      <div class="text-caption text-grey">
+      <div class="text-caption text-medium-emphasis">
         {{ t('footer.description') }}
       </div>
     </div>
   </v-footer>
 </template>
 
-<style scoped>
-</style>
+<style scoped></style>

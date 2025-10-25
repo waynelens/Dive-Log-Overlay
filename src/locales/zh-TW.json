@@ -7,7 +7,9 @@
     "workspace": "工作區"
   },
   "header": {
-    "title": "潛水記錄疊加工具"
+    "title": "潛水記錄疊加工具",
+    "toggleTheme": "切換深色模式",
+    "changeLanguage": "切換語言"
   },
   "footer": {
     "copyright": "{year} — Dive Log Overlay Tool",

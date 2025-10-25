@@ -7,7 +7,9 @@
     "workspace": "Workspace"
   },
   "header": {
-    "title": "Dive Log Overlay Tool"
+    "title": "Dive Log Overlay Tool",
+    "toggleTheme": "Toggle Dark Mode",
+    "changeLanguage": "Change Language"
   },
   "footer": {
     "copyright": "{year} — Dive Log Overlay Tool",

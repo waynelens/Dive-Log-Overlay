@@ -1,11 +1,13 @@
 <script setup>
 import { useI18n } from 'vue-i18n'
 import { setLocale, getCurrentLocale } from '@/plugins/i18n'
+import { useThemeStore } from '@/stores/themeStore'
 import { ref } from 'vue'
 import icon from '@/assets/icon.png'
 
 const { t } = useI18n()
 const currentLocale = ref(getCurrentLocale())
+const themeStore = useThemeStore()
 
 function toggleLocale() {
   const newLocale = currentLocale.value === 'zh-TW' ? 'en-US' : 'zh-TW'
@@ -28,16 +30,22 @@ function toggleLocale() {
     </v-row>
 
     <template #append>
+      <!-- Dark Mode Toggle -->
+      <v-btn :icon="themeStore.isDark ? 'mdi-weather-night' : 'mdi-weather-sunny'" @click="themeStore.toggleTheme" />
+
+      <!-- Language Toggle -->
       <v-btn icon="mdi-earth" @click="toggleLocale" />
+
+      <!-- GitHub Link -->
       <v-btn icon="mdi-github" href="https://github.com/waynelens/Dive-Log-Overlay" target="_blank" />
     </template>
   </v-app-bar>
 </template>
 
 <style scoped>
-/* light top and bottom border for app bar */
+/* Border that adapts to theme */
 .app-bar-borders {
-  border-top: 1px solid rgba(0, 0, 0, 0.08);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  border-top: thin solid rgba(var(--v-border-color), var(--v-border-opacity));
+  border-bottom: thin solid rgba(var(--v-border-color), var(--v-border-opacity));
 }
 </style>
