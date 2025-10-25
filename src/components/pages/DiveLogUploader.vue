@@ -61,13 +61,8 @@ function handleDragLeave() {
 </script>
 
 <template>
-  <v-card
-    class="upload-card"
-    :class="{ 'drag-over': isDragging }"
-    @dragover="handleDragOver"
-    @dragleave="handleDragLeave"
-    @drop.prevent="handleFileDrop"
-  >
+  <v-card class="upload-card" :class="{ 'drag-over': isDragging }" @dragover="handleDragOver"
+    @dragleave="handleDragLeave" @drop.prevent="handleFileDrop">
     <v-card-title>
       <v-icon icon="mdi-file-chart" class="mr-2" />
       {{ t('upload.diveLog.title') }}
@@ -76,23 +71,13 @@ function handleDragLeave() {
     <v-card-text>
       <div class="upload-area text-center">
         <v-icon icon="mdi-cloud-upload" size="64" color="primary" class="mb-4" />
-        
+
         <p class="text-h6 mb-2">{{ t('upload.diveLog.dragText') }}</p>
         <p class="text-caption text-grey mb-4">{{ t('upload.diveLog.selectText') }}</p>
 
-        <input
-          ref="fileInput"
-          type="file"
-          accept=".uddf"
-          style="display: none"
-          @change="handleFileSelect"
-        />
+        <input ref="fileInput" type="file" accept=".uddf" style="display: none" @change="handleFileSelect" />
 
-        <v-btn
-          color="primary"
-          prepend-icon="mdi-file-upload"
-          @click="$refs.fileInput.click()"
-        >
+        <v-btn color="primary" prepend-icon="mdi-file-upload" @click="$refs.fileInput.click()">
           {{ t('upload.diveLog.selectButton') }}
         </v-btn>
 
@@ -103,7 +88,6 @@ function handleDragLeave() {
 
         <div v-if="fileName && diveDataStore.hasDiveData" class="mt-4">
           <v-alert type="success" variant="tonal">
-            <v-icon icon="mdi-check-circle" class="mr-2" />
             {{ t('upload.diveLog.success', { filename: fileName }) }}
           </v-alert>
 
@@ -113,21 +97,24 @@ function handleDragLeave() {
                 <v-icon icon="mdi-clock-outline" />
               </template>
               <v-list-item-title>{{ t('upload.diveLog.stats.duration') }}</v-list-item-title>
-              <v-list-item-subtitle>{{ diveDataStore.diveDuration }} {{ t('upload.diveLog.stats.seconds') }}</v-list-item-subtitle>
+              <v-list-item-subtitle>{{ diveDataStore.diveDuration }} {{ t('upload.diveLog.stats.seconds')
+              }}</v-list-item-subtitle>
             </v-list-item>
             <v-list-item>
               <template #prepend>
                 <v-icon icon="mdi-arrow-down" />
               </template>
               <v-list-item-title>{{ t('upload.diveLog.stats.maxDepth') }}</v-list-item-title>
-              <v-list-item-subtitle>{{ diveDataStore.maxDepth.toFixed(1) }} {{ t('upload.diveLog.stats.meters') }}</v-list-item-subtitle>
+              <v-list-item-subtitle>{{ diveDataStore.maxDepth.toFixed(1) }} {{ t('upload.diveLog.stats.meters')
+              }}</v-list-item-subtitle>
             </v-list-item>
             <v-list-item>
               <template #prepend>
                 <v-icon icon="mdi-thermometer" />
               </template>
               <v-list-item-title>{{ t('upload.diveLog.stats.minTemp') }}</v-list-item-title>
-              <v-list-item-subtitle>{{ diveDataStore.minTemperature.toFixed(1) }} {{ t('upload.diveLog.stats.celsius') }}</v-list-item-subtitle>
+              <v-list-item-subtitle>{{ diveDataStore.minTemperature.toFixed(1) }} {{ t('upload.diveLog.stats.celsius')
+              }}</v-list-item-subtitle>
             </v-list-item>
           </v-list>
         </div>

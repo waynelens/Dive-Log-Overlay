@@ -102,7 +102,6 @@ function handleDragLeave() {
 
         <div v-if="fileName && videoStore.hasVideo" class="mt-4">
           <v-alert type="success" variant="tonal">
-            <v-icon icon="mdi-check-circle" class="mr-2" />
             {{ t('upload.video.success', { filename: fileName }) }}
           </v-alert>
 
