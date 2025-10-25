@@ -1,0 +1,6 @@
+node_modules
+dist
+.vscode
+.github
+*.min.js
+public

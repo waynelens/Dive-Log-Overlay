@@ -1,0 +1,8 @@
+node_modules
+dist
+.vscode
+.github
+*.min.js
+public
+pnpm-lock.yaml
+package-lock.json
