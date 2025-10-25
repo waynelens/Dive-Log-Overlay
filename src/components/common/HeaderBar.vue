@@ -7,9 +7,10 @@ import icon from '@/assets/icon.png'
 const { t } = useI18n()
 const currentLocale = ref(getCurrentLocale())
 
-function changeLocale(locale) {
-  setLocale(locale)
-  currentLocale.value = locale
+function toggleLocale() {
+  const newLocale = currentLocale.value === 'zh-TW' ? 'en-US' : 'zh-TW'
+  setLocale(newLocale)
+  currentLocale.value = newLocale
 }
 
 </script>
@@ -27,19 +28,7 @@ function changeLocale(locale) {
     </v-row>
 
     <template #append>
-      <v-menu>
-        <template #activator="{ props }">
-          <v-btn icon="mdi-translate" v-bind="props" />
-        </template>
-        <v-list>
-          <v-list-item @click="changeLocale('zh-TW')">
-            <v-list-item-title>繁體中文</v-list-item-title>
-          </v-list-item>
-          <v-list-item @click="changeLocale('en-US')">
-            <v-list-item-title>English</v-list-item-title>
-          </v-list-item>
-        </v-list>
-      </v-menu>
+      <v-btn icon="mdi-earth" @click="toggleLocale" />
       <v-btn icon="mdi-github" href="https://github.com/waynelens/Dive-Log-Overlay" target="_blank" />
     </template>
   </v-app-bar>
