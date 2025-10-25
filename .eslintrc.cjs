@@ -5,11 +5,7 @@ module.exports = {
     es2021: true,
     node: true,
   },
-  extends: [
-    'eslint:recommended',
-    'plugin:vue/vue3-recommended',
-    '@vue/eslint-config-prettier',
-  ],
+  extends: ['eslint:recommended', 'plugin:vue/vue3-recommended', '@vue/eslint-config-prettier'],
   parserOptions: {
     ecmaVersion: 'latest',
     sourceType: 'module',
@@ -20,7 +16,7 @@ module.exports = {
     'vue/no-v-html': 'warn',
     'vue/require-default-prop': 'off',
     'vue/require-prop-types': 'warn',
-    
+
     // General rules
     'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
     'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off',

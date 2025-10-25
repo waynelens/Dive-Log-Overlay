@@ -18,18 +18,13 @@ function changeLocale(locale) {
   <v-app-bar prominent flat elevation="0" class="app-bar-borders">
 
     <v-row class="align-center no-gutters">
-    <v-col cols="auto">
-      <v-img
-        :src="icon"
-        width="32"
-        height="32"
-        class="ml-3"
-      />
-    </v-col>
-    <v-col cols="auto" class="pl-0">
-      <span>Dive Log Overlay Tool</span>
-    </v-col>
-  </v-row>
+      <v-col cols="auto">
+        <v-img :src="icon" width="32" height="32" class="ml-3" />
+      </v-col>
+      <v-col cols="auto" class="pl-0">
+        <span>Dive Log Overlay Tool</span>
+      </v-col>
+    </v-row>
 
     <template #append>
       <v-menu>
@@ -53,7 +48,7 @@ function changeLocale(locale) {
 <style scoped>
 /* light top and bottom border for app bar */
 .app-bar-borders {
-  border-top: 1px solid rgba(0,0,0,0.08);
-  border-bottom: 1px solid rgba(0,0,0,0.08);
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
 }
 </style>
