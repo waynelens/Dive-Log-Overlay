@@ -6,9 +6,7 @@ const { t } = useI18n()
 const currentYear = new Date().getFullYear()
 
 const links = computed(() => [
-  { name: t('footer.links.guide'), url: '#' },
   { name: t('footer.links.github'), url: 'https://github.com/waynelens/Dive-Log-Overlay' },
-  { name: t('footer.links.about'), url: '#' },
 ])
 </script>
 

@@ -15,9 +15,7 @@
     "copyright": "{year} — Dive Log Overlay Tool",
     "description": "Built with Vue 3 + Vuetify | Supports UDDF Format Dive Logs",
     "links": {
-      "guide": "User Guide",
-      "github": "GitHub",
-      "about": "About"
+      "github": "GitHub"
     }
   },
   "upload": {
