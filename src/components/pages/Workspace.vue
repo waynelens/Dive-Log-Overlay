@@ -10,6 +10,7 @@ import VideoPlayer from './VideoPlayer.vue'
 import SyncTimeline from './SyncTimeline.vue'
 import OverlaySettings from './OverlaySettings.vue'
 import OverlayPreview from './OverlayPreview.vue'
+import ExportDialog from './ExportDialog.vue'
 
 const { t } = useI18n()
 const diveDataStore = useDiveDataStore()
@@ -18,8 +19,10 @@ const syncStore = useSyncStore()
 
 const currentTime = ref(0)
 const videoDuration = ref(0)
+const showExportDialog = ref(false)
 
 const canWork = computed(() => diveDataStore.hasDiveData && videoStore.hasVideo)
+const canExport = computed(() => canWork.value && syncStore.isSynced)
 
 function handleTimeSelected(time) {
   currentTime.value = time
@@ -40,6 +43,14 @@ function handleOffsetChanged(offset) {
 
 function handleTimeChanged(time) {
   currentTime.value = time
+}
+
+function openExportDialog() {
+  showExportDialog.value = true
+}
+
+function closeExportDialog() {
+  showExportDialog.value = false
 }
 </script>
 
@@ -105,7 +116,13 @@ function handleTimeChanged(time) {
         <v-col cols="12">
           <v-card>
             <v-card-text class="text-center">
-              <v-btn color="success" size="large" prepend-icon="mdi-export" :disabled="!syncStore.isSynced">
+              <v-btn 
+                color="success" 
+                size="large" 
+                prepend-icon="mdi-export" 
+                :disabled="!canExport"
+                @click="openExportDialog"
+              >
                 {{ t('workspace.export.button') }}
               </v-btn>
               <p class="text-caption text-grey mt-2">
@@ -115,6 +132,12 @@ function handleTimeChanged(time) {
           </v-card>
         </v-col>
       </v-row>
+
+      <!-- Export Dialog -->
+      <ExportDialog
+        v-if="showExportDialog"
+        @close="closeExportDialog"
+      />
     </div>
   </v-container>
 </template>

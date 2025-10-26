@@ -132,6 +132,53 @@
       "bottomRight": "Bottom Right"
     }
   },
+  "export": {
+    "title": "Export Video",
+    "description": "Overlay dive data onto video and export as MP4 file",
+    "loadingFFmpeg": "Loading FFmpeg...",
+    "fileName": "File Name",
+    "start": "Start Export",
+    "quality": {
+      "title": "Quality",
+      "low": "Low Quality",
+      "medium": "Medium Quality",
+      "high": "High Quality"
+    },
+    "resolution": {
+      "title": "Resolution",
+      "original": "Original Resolution"
+    },
+    "frameRate": "Frame Rate",
+    "bitrate": "Bitrate",
+    "steps": {
+      "idle": "Ready",
+      "loading": "Loading FFmpeg",
+      "preparing": "Preparing Files",
+      "rendering": "Rendering Overlay",
+      "compositing": "Compositing Video",
+      "done": "Complete",
+      "error": "Error"
+    },
+    "info": {
+      "title": "Export Info",
+      "video": "Video File",
+      "duration": "Video Duration",
+      "diveData": "Dive Data",
+      "waypoints": "waypoints",
+      "offset": "Time Offset"
+    },
+    "processing": {
+      "message": "Processing, please wait..."
+    },
+    "complete": {
+      "title": "Export Complete!",
+      "message": "Your video has been exported successfully",
+      "download": "Download Video"
+    },
+    "error": {
+      "title": "Export Failed"
+    }
+  },
   "common": {
     "loading": "Loading...",
     "error": "Error",

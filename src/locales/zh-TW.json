@@ -132,6 +132,53 @@
       "bottomRight": "右下角"
     }
   },
+  "export": {
+    "title": "匯出影片",
+    "description": "將潛水數據疊加到影片上並匯出為 MP4 檔案",
+    "loadingFFmpeg": "正在載入 FFmpeg...",
+    "fileName": "檔案名稱",
+    "start": "開始匯出",
+    "quality": {
+      "title": "品質",
+      "low": "低品質",
+      "medium": "中品質",
+      "high": "高品質"
+    },
+    "resolution": {
+      "title": "解析度",
+      "original": "原始解析度"
+    },
+    "frameRate": "幀率",
+    "bitrate": "位元率",
+    "steps": {
+      "idle": "準備中",
+      "loading": "載入 FFmpeg",
+      "preparing": "準備檔案",
+      "rendering": "渲染覆蓋層",
+      "compositing": "合成影片",
+      "done": "完成",
+      "error": "錯誤"
+    },
+    "info": {
+      "title": "匯出資訊",
+      "video": "影片檔案",
+      "duration": "影片長度",
+      "diveData": "潛水數據",
+      "waypoints": "個數據點",
+      "offset": "時間偏移"
+    },
+    "processing": {
+      "message": "正在處理中，請稍候..."
+    },
+    "complete": {
+      "title": "匯出完成！",
+      "message": "您的影片已成功匯出",
+      "download": "下載影片"
+    },
+    "error": {
+      "title": "匯出失敗"
+    }
+  },
   "common": {
     "loading": "載入中...",
     "error": "錯誤",
