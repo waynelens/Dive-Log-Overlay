@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/multi-word-component-names -->
 <script setup>
 import { ref, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
@@ -7,6 +8,8 @@ import { useSyncStore } from '@/stores/syncStore'
 import DiveChart from './DiveChart.vue'
 import VideoPlayer from './VideoPlayer.vue'
 import SyncTimeline from './SyncTimeline.vue'
+import OverlaySettings from './OverlaySettings.vue'
+import OverlayPreview from './OverlayPreview.vue'
 
 const { t } = useI18n()
 const diveDataStore = useDiveDataStore()
@@ -67,31 +70,27 @@ function handleTimeChanged(time) {
     <div v-else>
       <v-row>
         <v-col cols="12">
-          <DiveChart
-            :dive-data="diveDataStore.parsedData"
-            :current-time="currentTime"
-            @time-selected="handleTimeSelected"
-          />
+          <DiveChart :dive-data="diveDataStore.parsedData" :current-time="currentTime"
+            @time-selected="handleTimeSelected" />
         </v-col>
       </v-row>
 
       <v-row class="mt-4">
         <v-col cols="12" md="7">
-          <VideoPlayer
-            :video-url="videoStore.videoUrl"
-            :current-time="currentTime"
-            @time-updated="handleTimeUpdated"
-            @duration-loaded="handleDurationLoaded"
-          />
+          <OverlayPreview>
+            <VideoPlayer :video-url="videoStore.videoUrl" :current-time="currentTime" @time-updated="handleTimeUpdated"
+              @duration-loaded="handleDurationLoaded" />
+          </OverlayPreview>
         </v-col>
         <v-col cols="12" md="5">
-          <SyncTimeline
-            :dive-data="diveDataStore.parsedData"
-            :video-duration="videoDuration"
-            :current-offset="syncStore.timeOffset"
-            @offset-changed="handleOffsetChanged"
-            @time-changed="handleTimeChanged"
-          />
+          <SyncTimeline :dive-data="diveDataStore.parsedData" :video-duration="videoDuration"
+            :current-offset="syncStore.timeOffset" @offset-changed="handleOffsetChanged"
+            @time-changed="handleTimeChanged" />
+
+          <!-- Overlay Settings -->
+          <div class="mt-4">
+            <OverlaySettings />
+          </div>
         </v-col>
       </v-row>
 
@@ -99,12 +98,7 @@ function handleTimeChanged(time) {
         <v-col cols="12">
           <v-card>
             <v-card-text class="text-center">
-              <v-btn
-                color="success"
-                size="large"
-                prepend-icon="mdi-export"
-                :disabled="!syncStore.isSynced"
-              >
+              <v-btn color="success" size="large" prepend-icon="mdi-export" :disabled="!syncStore.isSynced">
                 {{ t('workspace.export.button') }}
               </v-btn>
               <p class="text-caption text-grey mt-2">
@@ -118,5 +112,4 @@ function handleTimeChanged(time) {
   </v-container>
 </template>
 
-<style scoped>
-</style>
+<style scoped></style>

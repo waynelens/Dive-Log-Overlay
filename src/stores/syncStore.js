@@ -5,9 +5,11 @@ export const useSyncStore = defineStore('sync', () => {
   // State
   const timeOffset = ref(0) // Offset between video start and dive log start (in seconds)
   const isSynced = ref(false)
+  const currentVideoTime = ref(0) // Current video playback time (in seconds)
 
   // Computed
   const offsetSeconds = computed(() => timeOffset.value)
+  const offset = computed(() => timeOffset.value) // Alias for OverlayPreview compatibility
 
   // Actions
   function setTimeOffset(offset) {
@@ -18,6 +20,15 @@ export const useSyncStore = defineStore('sync', () => {
   function resetSync() {
     timeOffset.value = 0
     isSynced.value = false
+    currentVideoTime.value = 0
+  }
+
+  /**
+   * Update current video playback time
+   * @param {number} time - Current video time in seconds
+   */
+  function updateCurrentTime(time) {
+    currentVideoTime.value = time
   }
 
   /**
@@ -42,11 +53,14 @@ export const useSyncStore = defineStore('sync', () => {
     // State
     timeOffset,
     isSynced,
+    currentVideoTime,
     // Computed
     offsetSeconds,
+    offset,
     // Actions
     setTimeOffset,
     resetSync,
+    updateCurrentTime,
     getDiveTimeForVideoTime,
     getVideoTimeForDiveTime,
   }

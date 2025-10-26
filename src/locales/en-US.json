@@ -103,6 +103,35 @@
     "hint": "Drag the 'Timeline Offset' slider to align the video start point with the dive log",
     "noData": "Please upload dive log and video first"
   },
+  "overlay": {
+    "settings": {
+      "title": "Overlay Settings",
+      "previewMode": "Preview Mode",
+      "fields": "Display Fields",
+      "style": "Style Settings",
+      "position": "Position",
+      "opacity": "Opacity",
+      "fontSize": "Font Size",
+      "reset": "Reset to Default"
+    },
+    "fields": {
+      "date": "Date",
+      "diveNumber": "Dive Number",
+      "depth": "Depth",
+      "temperature": "Temperature",
+      "divetime": "Dive Time",
+      "descentRate": "Descent Rate",
+      "ascentRate": "Ascent Rate"
+    },
+    "position": {
+      "top": "Top",
+      "bottom": "Bottom",
+      "topLeft": "Top Left",
+      "topRight": "Top Right",
+      "bottomLeft": "Bottom Left",
+      "bottomRight": "Bottom Right"
+    }
+  },
   "common": {
     "loading": "Loading...",
     "error": "Error",

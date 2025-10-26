@@ -103,6 +103,35 @@
     "hint": "拖動「時間軸偏移量」滑桿來調整影片與潛水記錄的起始點對齊",
     "noData": "請先上傳潛水記錄和影片"
   },
+  "overlay": {
+    "settings": {
+      "title": "疊加層設定",
+      "previewMode": "預覽模式",
+      "fields": "顯示欄位",
+      "style": "樣式設定",
+      "position": "位置",
+      "opacity": "不透明度",
+      "fontSize": "字體大小",
+      "reset": "重置為預設值"
+    },
+    "fields": {
+      "date": "日期",
+      "diveNumber": "潛水次數",
+      "depth": "深度",
+      "temperature": "溫度",
+      "divetime": "潛水時間",
+      "descentRate": "下潛速度",
+      "ascentRate": "上浮速度"
+    },
+    "position": {
+      "top": "頂部",
+      "bottom": "底部",
+      "topLeft": "左上角",
+      "topRight": "右上角",
+      "bottomLeft": "左下角",
+      "bottomRight": "右下角"
+    }
+  },
   "common": {
     "loading": "載入中...",
     "error": "錯誤",

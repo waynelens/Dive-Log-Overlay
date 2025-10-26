@@ -1,8 +1,10 @@
 <script setup>
 import { ref, watch, onMounted, onBeforeUnmount } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useSyncStore } from '@/stores/syncStore'
 
 const { t } = useI18n()
+const syncStore = useSyncStore()
 
 const props = defineProps({
   videoFile: {
@@ -43,7 +45,10 @@ function handleLoadedMetadata() {
 
 function handleTimeUpdate() {
   if (videoRef.value) {
-    emit('timeUpdated', videoRef.value.currentTime)
+    const currentTime = videoRef.value.currentTime
+    emit('timeUpdated', currentTime)
+    // Update syncStore for overlay preview
+    syncStore.updateCurrentTime(currentTime)
   }
 }
 
@@ -104,36 +109,19 @@ defineExpose({
 
     <v-card-text>
       <div v-if="videoUrl" class="video-container">
-        <video
-          ref="videoRef"
-          :src="videoUrl"
-          class="video-player"
-          @loadedmetadata="handleLoadedMetadata"
-          @timeupdate="handleTimeUpdate"
-          @play="handlePlay"
-          @pause="handlePause"
-        />
+        <video ref="videoRef" :src="videoUrl" class="video-player" @loadedmetadata="handleLoadedMetadata"
+          @timeupdate="handleTimeUpdate" @play="handlePlay" @pause="handlePause" />
 
         <div class="video-controls mt-4">
           <v-row align="center">
             <v-col cols="auto">
-              <v-btn
-                :icon="isPlaying ? 'mdi-pause' : 'mdi-play'"
-                color="primary"
-                @click="togglePlay"
-              />
+              <v-btn :icon="isPlaying ? 'mdi-pause' : 'mdi-play'" color="primary" @click="togglePlay" />
             </v-col>
             <v-col>
               <div class="d-flex align-center">
                 <v-icon icon="mdi-volume-high" class="mr-2" />
-                <v-slider
-                  v-model="volume"
-                  min="0"
-                  max="1"
-                  step="0.1"
-                  hide-details
-                  @update:model-value="handleVolumeChange"
-                />
+                <v-slider v-model="volume" min="0" max="1" step="0.1" hide-details
+                  @update:model-value="handleVolumeChange" />
               </div>
             </v-col>
             <v-col cols="auto">
