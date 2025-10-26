@@ -135,16 +135,16 @@ function handleDragLeave() {
                 <v-icon icon="mdi-arrow-down-bold" />
               </template>
               <v-list-item-title>{{ t('upload.diveLog.stats.avgDescentRate') }}</v-list-item-title>
-              <v-list-item-subtitle>{{ diveDataStore.avgDescentRate.toFixed(1) }}
-                {{ t('upload.diveLog.stats.metersPerMinute') }}</v-list-item-subtitle>
+              <v-list-item-subtitle>{{ diveDataStore.avgDescentRate.toFixed(2) }}
+                {{ t('upload.diveLog.stats.metersPerSecond') }}</v-list-item-subtitle>
             </v-list-item>
             <v-list-item>
               <template #prepend>
                 <v-icon icon="mdi-arrow-up-bold" />
               </template>
               <v-list-item-title>{{ t('upload.diveLog.stats.avgAscentRate') }}</v-list-item-title>
-              <v-list-item-subtitle>{{ diveDataStore.avgAscentRate.toFixed(1) }}
-                {{ t('upload.diveLog.stats.metersPerMinute') }}</v-list-item-subtitle>
+              <v-list-item-subtitle>{{ diveDataStore.avgAscentRate.toFixed(2) }}
+                {{ t('upload.diveLog.stats.metersPerSecond') }}</v-list-item-subtitle>
             </v-list-item>
           </v-list>
         </div>

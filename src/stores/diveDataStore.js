@@ -24,18 +24,46 @@ export const useDiveDataStore = defineStore('diveData', () => {
   const avgDescentRate = computed(() => {
     const waypoints = parsedData.value?.waypoints || []
     if (waypoints.length === 0) return 0
-    const validRates = waypoints.filter(w => w.descentRate > 0)
-    if (validRates.length === 0) return 0
-    const sum = validRates.reduce((acc, w) => acc + w.descentRate, 0)
-    return sum / validRates.length
+
+    let totalDescentDepth = 0
+    let totalDescentTime = 0
+
+    for (let i = 1; i < waypoints.length; i++) {
+      const depthDiff = waypoints[i].depth - waypoints[i - 1].depth
+      const timeDiff = waypoints[i].divetime - waypoints[i - 1].divetime
+
+      // Only count descent (positive depth change)
+      if (depthDiff > 0) {
+        totalDescentDepth += depthDiff
+        totalDescentTime += timeDiff
+      }
+    }
+
+    if (totalDescentTime === 0) return 0
+    // Calculate m/s (no conversion needed)
+    return totalDescentDepth / totalDescentTime
   })
   const avgAscentRate = computed(() => {
     const waypoints = parsedData.value?.waypoints || []
     if (waypoints.length === 0) return 0
-    const validRates = waypoints.filter(w => w.ascentRate > 0)
-    if (validRates.length === 0) return 0
-    const sum = validRates.reduce((acc, w) => acc + w.ascentRate, 0)
-    return sum / validRates.length
+
+    let totalAscentDepth = 0
+    let totalAscentTime = 0
+
+    for (let i = 1; i < waypoints.length; i++) {
+      const depthDiff = waypoints[i].depth - waypoints[i - 1].depth
+      const timeDiff = waypoints[i].divetime - waypoints[i - 1].divetime
+
+      // Only count ascent (negative depth change)
+      if (depthDiff < 0) {
+        totalAscentDepth += Math.abs(depthDiff)
+        totalAscentTime += timeDiff
+      }
+    }
+
+    if (totalAscentTime === 0) return 0
+    // Calculate m/s (no conversion needed)
+    return totalAscentDepth / totalAscentTime
   })
 
   // Actions

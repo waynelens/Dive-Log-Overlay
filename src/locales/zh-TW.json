@@ -43,7 +43,7 @@
         "seconds": "秒",
         "meters": "公尺",
         "celsius": "°C",
-        "metersPerMinute": "公尺/分鐘"
+        "metersPerSecond": "公尺/秒"
       }
     },
     "video": {

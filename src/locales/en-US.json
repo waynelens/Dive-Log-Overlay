@@ -43,7 +43,7 @@
         "seconds": "seconds",
         "meters": "meters",
         "celsius": "°C",
-        "metersPerMinute": "m/min"
+        "metersPerSecond": "m/s"
       }
     },
     "video": {
