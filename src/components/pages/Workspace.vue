@@ -76,21 +76,28 @@ function handleTimeChanged(time) {
       </v-row>
 
       <v-row class="mt-4">
-        <v-col cols="12" md="7">
+        <v-col cols="12" md="8">
+          <!-- 影片播放器 -->
           <OverlayPreview>
             <VideoPlayer :video-url="videoStore.videoUrl" :current-time="currentTime" @time-updated="handleTimeUpdated"
               @duration-loaded="handleDurationLoaded" />
           </OverlayPreview>
         </v-col>
-        <v-col cols="12" md="5">
+        <v-col cols="12" md="4">
+          <!-- 時間軸同步設定 -->
           <SyncTimeline :dive-data="diveDataStore.parsedData" :video-duration="videoDuration"
             :current-offset="syncStore.timeOffset" @offset-changed="handleOffsetChanged"
             @time-changed="handleTimeChanged" />
+        </v-col>
+      </v-row>
 
-          <!-- Overlay Settings -->
-          <div class="mt-4">
-            <OverlaySettings />
-          </div>
+      <!-- 覆蓋層設定 - 獨立一行 -->
+      <v-row class="mt-4">
+        <v-col cols="12" md="8">
+          <OverlaySettings />
+        </v-col>
+        <v-col cols="12" md="4">
+          <!-- 預留空間 -->
         </v-col>
       </v-row>
 

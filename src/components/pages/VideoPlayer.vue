@@ -82,6 +82,12 @@ function handleVolumeChange() {
   }
 }
 
+function formatTime(seconds) {
+  const mins = Math.floor(seconds / 60)
+  const secs = Math.floor(seconds % 60)
+  return `${mins}:${secs.toString().padStart(2, '0')}`
+}
+
 onMounted(() => {
   if (videoRef.value) {
     videoRef.value.volume = volume.value
@@ -112,7 +118,24 @@ defineExpose({
         <video ref="videoRef" :src="videoUrl" class="video-player" @loadedmetadata="handleLoadedMetadata"
           @timeupdate="handleTimeUpdate" @play="handlePlay" @pause="handlePause" />
 
-        <div class="video-controls mt-4">
+        <!-- 時間軸控制 -->
+        <div class="video-timeline mt-3">
+          <v-slider 
+            :model-value="currentTime" 
+            :min="0" 
+            :max="duration" 
+            :step="0.1"
+            color="primary"
+            thumb-label="always"
+            @update:model-value="seekTo"
+          >
+            <template #thumb-label="{ modelValue }">
+              {{ formatTime(modelValue) }}
+            </template>
+          </v-slider>
+        </div>
+
+        <div class="video-controls mt-2">
           <v-row align="center">
             <v-col cols="auto">
               <v-btn :icon="isPlaying ? 'mdi-pause' : 'mdi-play'" color="primary" @click="togglePlay" />
@@ -126,7 +149,7 @@ defineExpose({
             </v-col>
             <v-col cols="auto">
               <span class="text-caption">
-                {{ Math.floor(currentTime) }} / {{ Math.floor(duration) }} {{ t('video.seconds') }}
+                {{ formatTime(currentTime) }} / {{ formatTime(duration) }}
               </span>
             </v-col>
           </v-row>
@@ -159,6 +182,12 @@ defineExpose({
   flex-direction: column;
   justify-content: center;
   align-items: center;
+}
+
+.video-timeline {
+  padding: 0 1rem;
+  background-color: rgba(0, 0, 0, 0.03);
+  border-radius: 8px;
 }
 
 .video-controls {
