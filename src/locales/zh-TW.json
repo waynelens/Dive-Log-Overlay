@@ -36,9 +36,14 @@
         "duration": "潛水時長",
         "maxDepth": "最大深度",
         "minTemp": "最低溫度",
+        "diveNumber": "潛水次數",
+        "date": "潛水日期",
+        "maxDescentRate": "最大下潛速度",
+        "maxAscentRate": "最大上浮速度",
         "seconds": "秒",
         "meters": "公尺",
-        "celsius": "°C"
+        "celsius": "°C",
+        "metersPerMinute": "公尺/分鐘"
       }
     },
     "video": {

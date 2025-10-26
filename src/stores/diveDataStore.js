@@ -14,6 +14,18 @@ export const useDiveDataStore = defineStore('diveData', () => {
   const diveDuration = computed(() => parsedData.value?.diveDuration || 0)
   const maxDepth = computed(() => parsedData.value?.maxDepth || 0)
   const minTemperature = computed(() => parsedData.value?.minTemperature || 0)
+  const diveNumber = computed(() => parsedData.value?.diveNumber || 0)
+  const date = computed(() => parsedData.value?.date || '')
+  const maxDescentRate = computed(() => {
+    const waypoints = parsedData.value?.waypoints || []
+    if (waypoints.length === 0) return 0
+    return Math.max(...waypoints.map(w => w.descentRate || 0))
+  })
+  const maxAscentRate = computed(() => {
+    const waypoints = parsedData.value?.waypoints || []
+    if (waypoints.length === 0) return 0
+    return Math.max(...waypoints.map(w => w.ascentRate || 0))
+  })
 
   // Actions
   function setRawData(data) {
@@ -53,6 +65,10 @@ export const useDiveDataStore = defineStore('diveData', () => {
     diveDuration,
     maxDepth,
     minTemperature,
+    diveNumber,
+    date,
+    maxDescentRate,
+    maxAscentRate,
     // Actions
     setRawData,
     setParsedData,

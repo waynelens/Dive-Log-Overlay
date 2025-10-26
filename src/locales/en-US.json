@@ -36,9 +36,14 @@
         "duration": "Dive Duration",
         "maxDepth": "Max Depth",
         "minTemp": "Min Temperature",
+        "diveNumber": "Dive Number",
+        "date": "Dive Date",
+        "maxDescentRate": "Max Descent Rate",
+        "maxAscentRate": "Max Ascent Rate",
         "seconds": "seconds",
         "meters": "meters",
-        "celsius": "°C"
+        "celsius": "°C",
+        "metersPerMinute": "m/min"
       }
     },
     "video": {

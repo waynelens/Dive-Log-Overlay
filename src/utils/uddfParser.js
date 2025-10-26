@@ -20,12 +20,12 @@ function kelvinToCelsius(kelvin) {
  */
 function calculateRate(prevWaypoint, currWaypoint) {
   if (!prevWaypoint || !currWaypoint) return 0
-  
+
   const depthDiff = currWaypoint.depth - prevWaypoint.depth
   const timeDiff = currWaypoint.divetime - prevWaypoint.divetime
-  
+
   if (timeDiff === 0) return 0
-  
+
   // Convert from m/s to m/min
   return (depthDiff / timeDiff) * 60
 }
@@ -78,14 +78,14 @@ export async function parseUDDF(xmlString) {
       let rate = 0
       let descentRate = 0
       let ascentRate = 0
-      
+
       if (index > 0) {
         const prevWaypoint = {
           divetime: parseFloat(array[index - 1].querySelector('divetime')?.textContent || 0),
           depth: parseFloat(array[index - 1].querySelector('depth')?.textContent || 0),
         }
         rate = calculateRate(prevWaypoint, { divetime, depth })
-        
+
         // Separate descent (positive) and ascent (negative) rates
         if (rate > 0) {
           descentRate = rate
@@ -176,7 +176,7 @@ export async function parseUDDFFile(file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader()
 
-    reader.onload = async (e) => {
+    reader.onload = async e => {
       try {
         const xmlString = e.target.result
         const parsedData = await parseUDDF(xmlString)
