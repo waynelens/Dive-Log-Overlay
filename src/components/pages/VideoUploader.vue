@@ -60,13 +60,8 @@ function handleDragLeave() {
 </script>
 
 <template>
-  <v-card
-    class="upload-card"
-    :class="{ 'drag-over': isDragging }"
-    @dragover="handleDragOver"
-    @dragleave="handleDragLeave"
-    @drop.prevent="handleFileDrop"
-  >
+  <v-card class="upload-card" :class="{ 'drag-over': isDragging }" @dragover="handleDragOver"
+    @dragleave="handleDragLeave" @drop.prevent="handleFileDrop">
     <v-card-title>
       <v-icon icon="mdi-video" class="mr-2" />
       {{ t('upload.video.title') }}
@@ -75,23 +70,13 @@ function handleDragLeave() {
     <v-card-text>
       <div class="upload-area text-center">
         <v-icon icon="mdi-video-plus" size="64" color="primary" class="mb-4" />
-        
+
         <p class="text-h6 mb-2">{{ t('upload.video.dragText') }}</p>
         <p class="text-caption text-grey mb-4">{{ t('upload.video.formats') }}</p>
 
-        <input
-          ref="fileInput"
-          type="file"
-          accept="video/*"
-          style="display: none"
-          @change="handleFileSelect"
-        />
+        <input ref="fileInput" type="file" accept="video/*" style="display: none" @change="handleFileSelect" />
 
-        <v-btn
-          color="primary"
-          prepend-icon="mdi-video-box"
-          @click="$refs.fileInput.click()"
-        >
+        <v-btn color="primary" prepend-icon="mdi-video-box" @click="$refs.fileInput.click()">
           {{ t('upload.video.selectButton') }}
         </v-btn>
 
@@ -106,12 +91,8 @@ function handleDragLeave() {
           </v-alert>
 
           <div v-if="videoStore.videoUrl" class="mt-4">
-            <video
-              :src="videoStore.videoUrl"
-              class="preview-video"
-              controls
-              @loadedmetadata="(e) => videoStore.setVideoDuration(e.target.duration)"
-            />
+            <video :src="videoStore.videoUrl" class="preview-video" controls
+              @loadedmetadata="(e) => videoStore.setVideoDuration(e.target.duration)" />
           </div>
         </div>
 

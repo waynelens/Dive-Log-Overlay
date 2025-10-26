@@ -65,17 +65,23 @@ This is a **Vue 3 + Vuetify** based **SPA (Single Page Application)** that provi
 
 ### 1. UDDF Parser
 - Parse XML format UDDF files
-- Extract: `waypoints`, `divetime`, `depth`, `temperature`
+- Extract:
+  - **Basic Information**: `date` (dive date), `diveNumber` (dive count/number)
+  - **Time Series Data**: `waypoints`, `divetime`
+  - **Depth Data**: `depth`, `descentRate` (m/min), `ascentRate` (m/min)
+  - **Environmental Data**: `temperature` (convert from Kelvin to Celsius)
 - Convert to structured JSON format
 - Handle parsing errors gracefully
+- Calculate descent/ascent rates between waypoints
 - Location: `src/utils/uddfParser.js`
 
 ### 2. Data Visualization
 - Use Chart.js or ECharts for line charts
 - X-axis: dive time (divetime)
-- Y-axis: switchable between depth, temperature, and other metrics
+- Y-axis: switchable between depth, temperature, descent rate, ascent rate, and other metrics
 - Support hovering to show real-time values
 - Implement show/hide for different data series
+- Display dive basic information (date, dive number) in chart title or info panel
 
 ### 3. Video Player & Timeline Sync
 - Use native `<video>` element or Video.js
@@ -86,7 +92,7 @@ This is a **Vue 3 + Vuetify** based **SPA (Single Page Application)** that provi
 
 ### 4. Canvas Overlay Generation
 - Use HTML5 Canvas API
-- Display: Depth, Temperature, Dive Time per frame
+- Display: Depth, Temperature, Dive Time, Date, Descent/Ascent Rate per frame
 - Style: Semi-transparent bar at bottom
 - Update rate: 30 FPS
 - Use CCapture.js for frame capture
@@ -166,7 +172,9 @@ npm run lint
 - All dive data from Atmos App uses UDDF 3.2.3 format
 - Depth unit: meters (m)
 - Temperature unit: Celsius (°C) - stored as Kelvin in UDDF, needs conversion
+- Descent/Ascent Rate unit: meters per minute (m/min)
 - Time format: seconds or MM:SS format
+- Date format: ISO 8601 (YYYY-MM-DD)
 - Sample files available in `public/` directory:
   - `public/atmos.uddf` - Sample dive log
   - `public/LongDong.MP4` - Sample video
@@ -208,9 +216,13 @@ npm run lint
 ### Overlay Data Format (JSON)
 ```javascript
 {
-  depth: 15.2,        // meters
-  temperature: 25,    // Celsius
-  divetime: 345       // seconds
+  date: '2024-10-20',  // ISO 8601 date
+  diveNumber: 42,      // dive count
+  depth: 15.2,         // meters
+  temperature: 25,     // Celsius
+  divetime: 345,       // seconds
+  descentRate: 8.5,    // m/min (negative or positive based on direction)
+  ascentRate: 5.2      // m/min
 }
 ```
 

@@ -24,10 +24,18 @@
 ### 二、數據解析（UDDF Parser）
 
 - 解析內容：
-    - `waypoints`：每個採樣時間點資料。
-    - `divetime`：潛水總時長。
-    - `depth`：深度（單位：公尺）。
-    - `temperature`：溫度（單位：攝氏度）。
+    - **基本資訊**：
+        - `date`：潛水日期（ISO 8601 格式）
+        - `diveNumber`：潛水次數（第幾次下潛）
+    - **時間序列資料**：
+        - `waypoints`：每個採樣時間點資料
+        - `divetime`：潛水總時長（秒）
+    - **深度資料**：
+        - `depth`：深度（單位：公尺）
+        - `descentRate`：下潛速度（單位：公尺/分鐘）
+        - `ascentRate`：上浮速度（單位：公尺/分鐘）
+    - **環境資料**：
+        - `temperature`：溫度（單位：攝氏度，UDDF 原始為 Kelvin 需轉換）
 - 解析後以結構化 JSON 儲存，供後續繪圖與動畫使用。
 
 ### 三、數據可視化（Dive Data Visualization）
@@ -36,9 +44,12 @@
 - X 軸為潛水時間軸（divetime），Y 軸可切換顯示：
     - 深度（Depth）
     - 溫度（Temperature）
+    - 下潛速度（Descent Rate）
+    - 上浮速度（Ascent Rate）
     - 其他潛水相關指標（可擴充）
 - 可切換顯示/隱藏各曲線。
 - 支援游標懸停顯示時間點的即時數值。
+- 顯示潛水基本資訊（日期、潛水次數）。
 
 ### 四、影片預覽與時間軸對齊
 
@@ -55,9 +66,11 @@
         - 深度（Depth）
         - 溫度（Temperature）
         - 潛水時間（Dive Time）
+        - 潛水日期（Date）
+        - 下潛/上浮速度（Descent/Ascent Rate）
     - 樣式：
         - 底部半透明條狀背景。
-        - 文字範例：「Depth: 15.2m | Temperature: 25°C | Divetime: 05:45s」。
+        - 文字範例：「Depth: 15.2m | Temp: 25°C | Time: 05:45 | Rate: ↓2.5m/min」。
 - 畫面更新率：**30 FPS**。
 - 使用 **CCapture.js** 擷取 Canvas 幀，輸出 WebM 格式（供後續疊加）。
 
