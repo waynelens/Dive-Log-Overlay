@@ -13,6 +13,39 @@ function kelvinToCelsius(kelvin) {
 }
 
 /**
+ * Calculate descent/ascent rate between two waypoints
+ * @param {Object} prevWaypoint - Previous waypoint
+ * @param {Object} currWaypoint - Current waypoint
+ * @returns {number} - Rate in meters per minute (positive = descent, negative = ascent)
+ */
+function calculateRate(prevWaypoint, currWaypoint) {
+  if (!prevWaypoint || !currWaypoint) return 0
+  
+  const depthDiff = currWaypoint.depth - prevWaypoint.depth
+  const timeDiff = currWaypoint.divetime - prevWaypoint.divetime
+  
+  if (timeDiff === 0) return 0
+  
+  // Convert from m/s to m/min
+  return (depthDiff / timeDiff) * 60
+}
+
+/**
+ * Format ISO datetime to YYYY-MM-DD
+ * @param {string} datetime - ISO datetime string
+ * @returns {string} - Formatted date string
+ */
+function formatDate(datetime) {
+  if (!datetime) return ''
+  try {
+    const date = new Date(datetime)
+    return date.toISOString().split('T')[0]
+  } catch (error) {
+    return datetime.split('T')[0] || ''
+  }
+}
+
+/**
  * Parse UDDF XML string and extract dive data
  * @param {string} xmlString - UDDF XML content
  * @returns {Promise<Object>} - Parsed dive data
@@ -36,16 +69,39 @@ export async function parseUDDF(xmlString) {
 
     // Extract waypoints
     const waypointElements = xmlDoc.querySelectorAll('waypoint')
-    const waypoints = Array.from(waypointElements).map((waypoint) => {
+    const waypoints = Array.from(waypointElements).map((waypoint, index, array) => {
       const divetime = parseFloat(waypoint.querySelector('divetime')?.textContent || 0)
       const depth = parseFloat(waypoint.querySelector('depth')?.textContent || 0)
       const temperature = parseFloat(waypoint.querySelector('temperature')?.textContent || 0)
+
+      // Calculate descent/ascent rate
+      let rate = 0
+      let descentRate = 0
+      let ascentRate = 0
+      
+      if (index > 0) {
+        const prevWaypoint = {
+          divetime: parseFloat(array[index - 1].querySelector('divetime')?.textContent || 0),
+          depth: parseFloat(array[index - 1].querySelector('depth')?.textContent || 0),
+        }
+        rate = calculateRate(prevWaypoint, { divetime, depth })
+        
+        // Separate descent (positive) and ascent (negative) rates
+        if (rate > 0) {
+          descentRate = rate
+        } else if (rate < 0) {
+          ascentRate = Math.abs(rate)
+        }
+      }
 
       return {
         divetime, // seconds
         depth, // meters
         temperature: kelvinToCelsius(temperature), // Convert Kelvin to Celsius
         temperatureRaw: temperature, // Keep original Kelvin value
+        rate, // m/min (positive = descending, negative = ascending)
+        descentRate, // m/min (always positive or 0)
+        ascentRate, // m/min (always positive or 0)
       }
     })
 
@@ -66,6 +122,7 @@ export async function parseUDDF(xmlString) {
       ),
       diveNumber: parseInt(informationBeforeDive?.querySelector('divenumber')?.textContent || 0),
       datetime: informationBeforeDive?.querySelector('datetime')?.textContent || '',
+      date: formatDate(informationBeforeDive?.querySelector('datetime')?.textContent || ''),
       airTemperature: parseFloat(
         informationBeforeDive?.querySelector('airtemperature')?.textContent || 0
       ),
@@ -100,6 +157,9 @@ export async function parseUDDF(xmlString) {
       diveDuration: metadata.diveDuration,
       maxDepth: metadata.maxDepth,
       minTemperature: metadata.minTemperature,
+      diveNumber: metadata.diveNumber,
+      date: metadata.date,
+      datetime: metadata.datetime,
     }
   } catch (error) {
     console.error('Error parsing UDDF:', error)
@@ -162,4 +222,24 @@ export function getDiveDataAtTime(waypoints, time) {
   })
 
   return closest
+}
+
+/**
+ * Get maximum descent rate from waypoints
+ * @param {Array} waypoints - Array of waypoints
+ * @returns {number} - Maximum descent rate in m/min
+ */
+export function getMaxDescentRate(waypoints) {
+  if (!waypoints || waypoints.length === 0) return 0
+  return Math.max(...waypoints.map(w => w.descentRate || 0))
+}
+
+/**
+ * Get maximum ascent rate from waypoints
+ * @param {Array} waypoints - Array of waypoints
+ * @returns {number} - Maximum ascent rate in m/min
+ */
+export function getMaxAscentRate(waypoints) {
+  if (!waypoints || waypoints.length === 0) return 0
+  return Math.max(...waypoints.map(w => w.ascentRate || 0))
 }
