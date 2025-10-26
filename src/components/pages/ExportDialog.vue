@@ -23,8 +23,8 @@ const exportFileName = ref('dive-video-export')
 const canStartExport = computed(() => {
   return exportStore.isReady && 
          diveDataStore.hasDiveData && 
-         videoStore.hasVideo && 
-         syncStore.isSynced
+         videoStore.hasVideo
+  // 移除 syncStore.isSynced 的限制，允許不調整時間軸也能匯出
 })
 
 const stepText = computed(() => {

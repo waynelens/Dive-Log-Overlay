@@ -64,7 +64,7 @@
     },
     "export": {
       "button": "Prepare to Export Video",
-      "hint": "Please adjust timeline synchronization settings before exporting"
+      "hint": "Adjust overlay settings and timeline sync (optional) before exporting"
     }
   },
   "chart": {

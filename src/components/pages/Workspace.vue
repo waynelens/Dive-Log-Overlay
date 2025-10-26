@@ -22,7 +22,7 @@ const videoDuration = ref(0)
 const showExportDialog = ref(false)
 
 const canWork = computed(() => diveDataStore.hasDiveData && videoStore.hasVideo)
-const canExport = computed(() => canWork.value && syncStore.isSynced)
+const canExport = computed(() => canWork.value) // 移除 syncStore.isSynced 的限制
 
 function handleTimeSelected(time) {
   currentTime.value = time
