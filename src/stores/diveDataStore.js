@@ -13,18 +13,29 @@ export const useDiveDataStore = defineStore('diveData', () => {
   const waypoints = computed(() => parsedData.value?.waypoints || [])
   const diveDuration = computed(() => parsedData.value?.diveDuration || 0)
   const maxDepth = computed(() => parsedData.value?.maxDepth || 0)
-  const minTemperature = computed(() => parsedData.value?.minTemperature || 0)
+  const avgTemperature = computed(() => {
+    const waypoints = parsedData.value?.waypoints || []
+    if (waypoints.length === 0) return 0
+    const sum = waypoints.reduce((acc, w) => acc + (w.temperature || 0), 0)
+    return sum / waypoints.length
+  })
   const diveNumber = computed(() => parsedData.value?.diveNumber || 0)
   const date = computed(() => parsedData.value?.date || '')
-  const maxDescentRate = computed(() => {
+  const avgDescentRate = computed(() => {
     const waypoints = parsedData.value?.waypoints || []
     if (waypoints.length === 0) return 0
-    return Math.max(...waypoints.map(w => w.descentRate || 0))
+    const validRates = waypoints.filter(w => w.descentRate > 0)
+    if (validRates.length === 0) return 0
+    const sum = validRates.reduce((acc, w) => acc + w.descentRate, 0)
+    return sum / validRates.length
   })
-  const maxAscentRate = computed(() => {
+  const avgAscentRate = computed(() => {
     const waypoints = parsedData.value?.waypoints || []
     if (waypoints.length === 0) return 0
-    return Math.max(...waypoints.map(w => w.ascentRate || 0))
+    const validRates = waypoints.filter(w => w.ascentRate > 0)
+    if (validRates.length === 0) return 0
+    const sum = validRates.reduce((acc, w) => acc + w.ascentRate, 0)
+    return sum / validRates.length
   })
 
   // Actions
@@ -64,11 +75,11 @@ export const useDiveDataStore = defineStore('diveData', () => {
     waypoints,
     diveDuration,
     maxDepth,
-    minTemperature,
+    avgTemperature,
     diveNumber,
     date,
-    maxDescentRate,
-    maxAscentRate,
+    avgDescentRate,
+    avgAscentRate,
     // Actions
     setRawData,
     setParsedData,

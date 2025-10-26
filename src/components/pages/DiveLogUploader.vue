@@ -111,48 +111,40 @@ function handleDragLeave() {
                 <v-icon icon="mdi-clock-outline" />
               </template>
               <v-list-item-title>{{ t('upload.diveLog.stats.duration') }}</v-list-item-title>
-              <v-list-item-subtitle
-                >{{ diveDataStore.diveDuration }} {{ t('upload.diveLog.stats.seconds') }}</v-list-item-subtitle
-              >
+              <v-list-item-subtitle>{{ diveDataStore.diveDuration }} {{ t('upload.diveLog.stats.seconds')
+              }}</v-list-item-subtitle>
             </v-list-item>
             <v-list-item>
               <template #prepend>
                 <v-icon icon="mdi-arrow-down" />
               </template>
               <v-list-item-title>{{ t('upload.diveLog.stats.maxDepth') }}</v-list-item-title>
-              <v-list-item-subtitle
-                >{{ diveDataStore.maxDepth.toFixed(1) }} {{ t('upload.diveLog.stats.meters') }}</v-list-item-subtitle
-              >
+              <v-list-item-subtitle>{{ diveDataStore.maxDepth.toFixed(1) }} {{ t('upload.diveLog.stats.meters')
+              }}</v-list-item-subtitle>
             </v-list-item>
             <v-list-item>
               <template #prepend>
                 <v-icon icon="mdi-thermometer" />
               </template>
-              <v-list-item-title>{{ t('upload.diveLog.stats.minTemp') }}</v-list-item-title>
-              <v-list-item-subtitle
-                >{{ diveDataStore.minTemperature.toFixed(1) }}
-                {{ t('upload.diveLog.stats.celsius') }}</v-list-item-subtitle
-              >
+              <v-list-item-title>{{ t('upload.diveLog.stats.avgTemp') }}</v-list-item-title>
+              <v-list-item-subtitle>{{ diveDataStore.avgTemperature.toFixed(1) }}
+                {{ t('upload.diveLog.stats.celsius') }}</v-list-item-subtitle>
             </v-list-item>
             <v-list-item>
               <template #prepend>
                 <v-icon icon="mdi-arrow-down-bold" />
               </template>
-              <v-list-item-title>{{ t('upload.diveLog.stats.maxDescentRate') }}</v-list-item-title>
-              <v-list-item-subtitle
-                >{{ diveDataStore.maxDescentRate.toFixed(1) }}
-                {{ t('upload.diveLog.stats.metersPerMinute') }}</v-list-item-subtitle
-              >
+              <v-list-item-title>{{ t('upload.diveLog.stats.avgDescentRate') }}</v-list-item-title>
+              <v-list-item-subtitle>{{ diveDataStore.avgDescentRate.toFixed(1) }}
+                {{ t('upload.diveLog.stats.metersPerMinute') }}</v-list-item-subtitle>
             </v-list-item>
             <v-list-item>
               <template #prepend>
                 <v-icon icon="mdi-arrow-up-bold" />
               </template>
-              <v-list-item-title>{{ t('upload.diveLog.stats.maxAscentRate') }}</v-list-item-title>
-              <v-list-item-subtitle
-                >{{ diveDataStore.maxAscentRate.toFixed(1) }}
-                {{ t('upload.diveLog.stats.metersPerMinute') }}</v-list-item-subtitle
-              >
+              <v-list-item-title>{{ t('upload.diveLog.stats.avgAscentRate') }}</v-list-item-title>
+              <v-list-item-subtitle>{{ diveDataStore.avgAscentRate.toFixed(1) }}
+                {{ t('upload.diveLog.stats.metersPerMinute') }}</v-list-item-subtitle>
             </v-list-item>
           </v-list>
         </div>
