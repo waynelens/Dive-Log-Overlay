@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import { FFmpeg } from '@ffmpeg/ffmpeg'
-import { toBlobURL } from '@ffmpeg/util'
+import { fetchFile, toBlobURL } from '@ffmpeg/util'
 
 export const useExportStore = defineStore('export', () => {
   // State
@@ -41,26 +41,26 @@ export const useExportStore = defineStore('export', () => {
 
       ffmpeg.value = new FFmpeg()
 
-      // Set up progress callback
-      ffmpeg.value.on('progress', ({ progress: p }) => {
-        if (currentStep.value === 'loading') {
-          loadingProgress.value = p * 100
-        } else {
-          progress.value = p * 100
-        }
-      })
-
+      // Set up log callback
       ffmpeg.value.on('log', ({ message }) => {
         console.log('[FFmpeg]', message)
       })
 
+      // Set up progress callback for processing
+      ffmpeg.value.on('progress', ({ progress: p, time }) => {
+        console.log('[FFmpeg Progress]', p, time)
+        if (currentStep.value === 'compositing') {
+          progress.value = p * 100
+        }
+      })
+
       // Load FFmpeg with CDN URLs
-      const baseURL = 'https://unpkg.com/@ffmpeg/core@0.12.10/dist/esm'
+      const baseURL = 'https://unpkg.com/@ffmpeg/core@0.12.6/dist/esm'
       
+      loadingProgress.value = 10
       await ffmpeg.value.load({
         coreURL: await toBlobURL(`${baseURL}/ffmpeg-core.js`, 'text/javascript'),
-        wasmURL: await toBlobURL(`${baseURL}/ffmpeg-core.wasm`, 'application/wasm'),
-        workerURL: await toBlobURL(`${baseURL}/ffmpeg-core.worker.js`, 'text/javascript'),
+        wasmURL: await toBlobURL(`${baseURL}/ffmpeg-core.wasm`, 'application/wasm')
       })
 
       isLoaded.value = true
@@ -96,9 +96,8 @@ export const useExportStore = defineStore('export', () => {
       // Step 1: Write input video to FFmpeg filesystem
       currentStep.value = 'preparing'
       progress.value = 10
-      const videoData = await videoFile.arrayBuffer()
-      const inputVideoName = 'input.mp4'
-      await ffmpeg.value.writeFile(inputVideoName, new Uint8Array(videoData))
+      const videoData = await fetchFile(videoFile)
+      await ffmpeg.value.writeFile('input.mp4', videoData)
 
       // Step 2: Generate overlay frames
       currentStep.value = 'rendering'
@@ -116,24 +115,23 @@ export const useExportStore = defineStore('export', () => {
       
       // FFmpeg command to overlay
       await ffmpeg.value.exec([
-        '-i', inputVideoName,
+        '-i', 'input.mp4',
         '-i', 'overlay.mp4',
-        '-filter_complex', '[1:v]format=rgba,colorchannelmixer=aa=0.8[overlay];[0:v][overlay]overlay=0:0[v]',
+        '-filter_complex', '[0:v][1:v]overlay=0:0[v]',
         '-map', '[v]',
         '-map', '0:a?',
         '-c:v', 'libx264',
-        '-c:a', 'aac',
-        '-b:v', exportSettings.value.videoBitrate,
-        '-b:a', exportSettings.value.audioBitrate,
-        '-y',
-        outputVideoName
+        '-preset', 'fast',
+        '-crf', '23',
+        '-c:a', 'copy',
+        'output.mp4'
       ])
 
       // Step 5: Read output file
       currentStep.value = 'done'
       progress.value = 100
-      const outputData = await ffmpeg.value.readFile(outputVideoName)
-      const blob = new Blob([outputData], { type: 'video/mp4' })
+      const outputData = await ffmpeg.value.readFile('output.mp4')
+      const blob = new Blob([outputData.buffer], { type: 'video/mp4' })
       
       outputFile.value = blob
       downloadUrl.value = URL.createObjectURL(blob)
@@ -159,12 +157,15 @@ export const useExportStore = defineStore('export', () => {
       const timestamp = i / frameRate
       const canvas = createOverlayCanvas(overlayData, timestamp)
       
-      // Convert canvas to PNG
+      // Convert canvas to PNG and write to FFmpeg
       const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'))
-      const arrayBuffer = await blob.arrayBuffer()
+      const frameData = await fetchFile(blob)
       const frameFileName = `frame_${i.toString().padStart(6, '0')}.png`
       
-      await ffmpeg.value.writeFile(frameFileName, new Uint8Array(arrayBuffer))
+      await ffmpeg.value.writeFile(frameFileName, frameData)
+      
+      // Update progress (30% - 60%)
+      progress.value = 30 + (i / totalFrames) * 30
     }
   }
 
@@ -256,7 +257,7 @@ export const useExportStore = defineStore('export', () => {
   function cleanup() {
     reset()
     if (ffmpeg.value) {
-      ffmpeg.value.terminate()
+      // Note: FFmpeg.wasm v0.12+ doesn't need explicit termination
       ffmpeg.value = null
     }
     isLoaded.value = false
