@@ -5,7 +5,7 @@ import { fetchFile, toBlobURL } from '@ffmpeg/util'
 
 export const useExportStore = defineStore('export', () => {
   // State
-  const ffmpeg = ref(null)
+  let ffmpegInstance = null // Use a plain variable to avoid Vue proxy issues
   const isLoaded = ref(false)
   const isProcessing = ref(false)
   const loadingProgress = ref(0)
@@ -22,7 +22,7 @@ export const useExportStore = defineStore('export', () => {
     resolution: 'original', // 'original', '1920x1080', '1280x720'
     frameRate: 30,
     videoBitrate: '5000k',
-    audioBitrate: '128k'
+    audioBitrate: '128k',
   })
 
   // Computed
@@ -32,35 +32,33 @@ export const useExportStore = defineStore('export', () => {
 
   // Actions
   async function loadFFmpeg() {
-    if (isLoaded.value) return
+    if (isLoaded.value || ffmpegInstance) return
 
     try {
       currentStep.value = 'loading'
       loadingProgress.value = 0
       error.value = null
 
-      ffmpeg.value = new FFmpeg()
+      ffmpegInstance = new FFmpeg()
 
       // Set up log callback
-      ffmpeg.value.on('log', ({ message }) => {
+      ffmpegInstance.on('log', ({ message }) => {
         console.log('[FFmpeg]', message)
       })
 
       // Set up progress callback for processing
-      ffmpeg.value.on('progress', ({ progress: p, time }) => {
+      ffmpegInstance.on('progress', ({ progress: p, time }) => {
         console.log('[FFmpeg Progress]', p, time)
         if (currentStep.value === 'compositing') {
           progress.value = p * 100
         }
       })
 
-      // Load FFmpeg with CDN URLs
-      const baseURL = 'https://unpkg.com/@ffmpeg/core@0.12.6/dist/esm'
-      
+      // Load FFmpeg with local files from the public directory
       loadingProgress.value = 10
-      await ffmpeg.value.load({
-        coreURL: await toBlobURL(`${baseURL}/ffmpeg-core.js`, 'text/javascript'),
-        wasmURL: await toBlobURL(`${baseURL}/ffmpeg-core.wasm`, 'application/wasm')
+      await ffmpegInstance.load({
+        coreURL: await toBlobURL('/ffmpeg.wasm/core/dist/esm/ffmpeg-core.js', 'text/javascript'),
+        wasmURL: await toBlobURL('/ffmpeg.wasm/core/dist/esm/ffmpeg-core.wasm', 'application/wasm'),
       })
 
       isLoaded.value = true
@@ -77,7 +75,7 @@ export const useExportStore = defineStore('export', () => {
   }
 
   async function exportVideo(config) {
-    if (!isLoaded.value) {
+    if (!isLoaded.value || !ffmpegInstance) {
       throw new Error('FFmpeg not loaded')
     }
 
@@ -97,7 +95,7 @@ export const useExportStore = defineStore('export', () => {
       currentStep.value = 'preparing'
       progress.value = 10
       const videoData = await fetchFile(videoFile)
-      await ffmpeg.value.writeFile('input.mp4', videoData)
+      await ffmpegInstance.writeFile('input.mp4', videoData)
 
       // Step 2: Generate overlay frames
       currentStep.value = 'rendering'
@@ -112,33 +110,41 @@ export const useExportStore = defineStore('export', () => {
       currentStep.value = 'compositing'
       progress.value = 80
       const outputVideoName = outputFileName || 'output.mp4'
-      
+
       // FFmpeg command to overlay
-      await ffmpeg.value.exec([
-        '-i', 'input.mp4',
-        '-i', 'overlay.mp4',
-        '-filter_complex', '[0:v][1:v]overlay=0:0[v]',
-        '-map', '[v]',
-        '-map', '0:a?',
-        '-c:v', 'libx264',
-        '-preset', 'fast',
-        '-crf', '23',
-        '-c:a', 'copy',
-        'output.mp4'
+      await ffmpegInstance.exec([
+        '-i',
+        'input.mp4',
+        '-i',
+        'overlay.mp4',
+        '-filter_complex',
+        '[0:v][1:v]overlay=0:0[v]',
+        '-map',
+        '[v]',
+        '-map',
+        '0:a?',
+        '-c:v',
+        'libx264',
+        '-preset',
+        'fast',
+        '-crf',
+        '23',
+        '-c:a',
+        'copy',
+        'output.mp4',
       ])
 
       // Step 5: Read output file
       currentStep.value = 'done'
       progress.value = 100
-      const outputData = await ffmpeg.value.readFile('output.mp4')
+      const outputData = await ffmpegInstance.readFile('output.mp4')
       const blob = new Blob([outputData.buffer], { type: 'video/mp4' })
-      
+
       outputFile.value = blob
       downloadUrl.value = URL.createObjectURL(blob)
 
       console.log('Video export completed successfully')
       return { blob, downloadUrl: downloadUrl.value }
-
     } catch (err) {
       console.error('Export failed:', err)
       error.value = `匯出失敗: ${err.message}`
@@ -156,14 +162,14 @@ export const useExportStore = defineStore('export', () => {
     for (let i = 0; i < totalFrames; i++) {
       const timestamp = i / frameRate
       const canvas = createOverlayCanvas(overlayData, timestamp)
-      
+
       // Convert canvas to PNG and write to FFmpeg
       const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'))
       const frameData = await fetchFile(blob)
       const frameFileName = `frame_${i.toString().padStart(6, '0')}.png`
-      
-      await ffmpeg.value.writeFile(frameFileName, frameData)
-      
+
+      await ffmpegInstance.writeFile(frameFileName, frameData)
+
       // Update progress (30% - 60%)
       progress.value = 30 + (i / totalFrames) * 30
     }
@@ -171,21 +177,26 @@ export const useExportStore = defineStore('export', () => {
 
   async function createOverlayVideo(duration) {
     const frameRate = exportSettings.value.frameRate
-    
-    await ffmpeg.value.exec([
-      '-framerate', frameRate.toString(),
-      '-i', 'frame_%06d.png',
-      '-c:v', 'libx264',
-      '-pix_fmt', 'rgba',
-      '-t', duration.toString(),
-      'overlay.mp4'
+
+    await ffmpegInstance.exec([
+      '-framerate',
+      frameRate.toString(),
+      '-i',
+      'frame_%06d.png',
+      '-c:v',
+      'libx264',
+      '-pix_fmt',
+      'rgba',
+      '-t',
+      duration.toString(),
+      'overlay.mp4',
     ])
   }
 
   function createOverlayCanvas(overlayData, timestamp) {
     const canvas = document.createElement('canvas')
     const ctx = canvas.getContext('2d')
-    
+
     canvas.width = 1920
     canvas.height = 1080
 
@@ -194,7 +205,7 @@ export const useExportStore = defineStore('export', () => {
 
     // Find data point for this timestamp
     const dataPoint = findDataPointAtTime(overlayData, timestamp)
-    
+
     if (dataPoint) {
       renderOverlayContent(ctx, dataPoint, canvas.width, canvas.height)
     }
@@ -203,36 +214,38 @@ export const useExportStore = defineStore('export', () => {
   }
 
   function findDataPointAtTime(overlayData, timestamp) {
-    return overlayData.find((data, index) => {
-      const nextData = overlayData[index + 1]
-      if (!nextData) return data.timestamp <= timestamp
-      return data.timestamp <= timestamp && nextData.timestamp > timestamp
-    }) || overlayData[overlayData.length - 1]
+    return (
+      overlayData.find((data, index) => {
+        const nextData = overlayData[index + 1]
+        if (!nextData) return data.timestamp <= timestamp
+        return data.timestamp <= timestamp && nextData.timestamp > timestamp
+      }) || overlayData[overlayData.length - 1]
+    )
   }
 
   function renderOverlayContent(ctx, dataPoint, width, height) {
     // Basic overlay rendering - this will be enhanced with actual overlay store data
     const overlayHeight = 120
     const overlayY = height - overlayHeight - 20
-    
+
     // Background
     ctx.fillStyle = 'rgba(0, 0, 0, 0.7)'
     ctx.fillRect(20, overlayY, width - 40, overlayHeight)
-    
+
     // Text
     ctx.fillStyle = '#FFFFFF'
     ctx.font = '24px Arial'
     ctx.textBaseline = 'top'
-    
+
     const fields = [
       `深度: ${dataPoint.depth?.toFixed(1) || '--'}m`,
       `溫度: ${dataPoint.temperature?.toFixed(1) || '--'}°C`,
       `時間: ${formatDiveTime(dataPoint.divetime || 0)}`,
-      `日期: ${dataPoint.date || '--'}`
+      `日期: ${dataPoint.date || '--'}`,
     ]
-    
+
     fields.forEach((field, index) => {
-      ctx.fillText(field, 40, overlayY + 20 + (index * 30))
+      ctx.fillText(field, 40, overlayY + 20 + index * 30)
     })
   }
 
@@ -256,16 +269,15 @@ export const useExportStore = defineStore('export', () => {
 
   function cleanup() {
     reset()
-    if (ffmpeg.value) {
+    if (ffmpegInstance) {
       // Note: FFmpeg.wasm v0.12+ doesn't need explicit termination
-      ffmpeg.value = null
+      ffmpegInstance = null
     }
     isLoaded.value = false
   }
 
   return {
     // State
-    ffmpeg,
     isLoaded,
     isProcessing,
     loadingProgress,
