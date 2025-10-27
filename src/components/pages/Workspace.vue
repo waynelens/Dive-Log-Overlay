@@ -22,7 +22,6 @@ const videoDuration = ref(0)
 const showExportDialog = ref(false)
 
 const canWork = computed(() => diveDataStore.hasDiveData && videoStore.hasVideo)
-const canExport = computed(() => canWork.value) // 移除 syncStore.isSynced 的限制
 
 function handleTimeSelected(time) {
   currentTime.value = time
@@ -120,7 +119,6 @@ function closeExportDialog() {
                 color="success" 
                 size="large" 
                 prepend-icon="mdi-export" 
-                :disabled="!canExport"
                 @click="openExportDialog"
               >
                 {{ t('workspace.export.button') }}
