@@ -32,15 +32,15 @@
     - `divetime`：潛水總時長（秒）
   - **深度資料**：
     - `depth`：深度（單位：公尺）
-    - `descentRate`：下潛速度（單位：公尺/分鐘）
-    - `ascentRate`：上浮速度（單位：公尺/分鐘）
+    - `descentRate`：下潛速度（單位：公尺/秒）
+    - `ascentRate`：上浮速度（單位：公尺/秒）
   - **環境資料**：
     - `temperature`：溫度（單位：攝氏度，UDDF 原始為 Kelvin 需轉換）
 - 解析後以結構化 JSON 儲存，供後續繪圖與動畫使用。
 
 ### 三、數據可視化（Dive Data Visualization）
 
-- 使用 **Chart.js** 或 **ECharts** 呈現曲線圖。
+- 使用 **Chart.js + vue-chartjs** 呈現曲線圖。
 - X 軸為潛水時間軸（divetime），Y 軸可切換顯示：
   - 深度（Depth）
   - 溫度（Temperature）
@@ -49,58 +49,58 @@
   - 其他潛水相關指標（可擴充）
 - 可切換顯示/隱藏各曲線。
 - 支援游標懸停顯示時間點的即時數值。
+- 支援點擊圖表跳轉到對應影片時間。
 - 顯示潛水基本資訊（日期、潛水次數）。
 
 ### 四、影片預覽與時間軸對齊
 
-- 影片播放器採用原生 `<video>` 元件或 Video.js。
+- 影片播放器採用原生 `<video>` 元件。
 - 使用者可拖拉時間軸（timeline slider）對齊：
   - 影片起始時間 ↔ 潛水紀錄起點。
 - 若影片長度超過記錄長度，則記錄停在最後一筆數據。
 - 即時預覽同步效果。
+- 支援不調整時間軸直接匯出（offset = 0）。
 
-### 五、生成 Overlay 動畫 / 影片
+### 五、覆蓋層設定與預覽
+
+- **可自訂顯示欄位**：
+  - 日期、潛水次數、深度、溫度、潛水時間、下潛/上浮速度
+- **樣式設定**：
+  - 位置：頂部、底部、四個角落
+  - 不透明度：0-100%
+  - 字體大小：12-32px
+  - 背景顏色與文字顏色
+- **即時預覽**：
+  - 在影片播放器上即時顯示覆蓋層效果
+  - 預覽模式可隨時開關
+
+### 六、生成 Overlay 動畫與影片匯出
 
 - 使用 **HTML5 Canvas** 繪製 overlay 動畫：
-  - 每幀顯示：
-    - 深度（Depth）
-    - 溫度（Temperature）
-    - 潛水時間（Dive Time）
-    - 潛水日期（Date）
-    - 下潛/上浮速度（Descent/Ascent Rate）
-  - 樣式：
-    - 底部半透明條狀背景。
-    - 文字範例：「Depth: 15.2m | Temp: 25°C | Time: 05:45 | Rate: ↓2.5m/min」。
-- 畫面更新率：**30 FPS**。
-- 使用 **CCapture.js** 擷取 Canvas 幀，輸出 WebM 格式（供後續疊加）。
-
-### 六、疊加與輸出（FFmpeg.wasm）
-
-- 使用 **FFmpeg.wasm** 執行影片合成。
-- 濾鏡：`overlay`（支援 alpha 通道）
-  - 若 overlay 解析度不同，自動縮放。
-- 輸出格式：MP4
-- 提供輸出參數設定視窗：
-  - 影片解析度
-  - 幀率
-  - 編碼品質（Bitrate）
-- 支援：
-  - 影片預覽
-  - 輸出並下載結果影片
+  - 每幀顯示使用者選擇的資料欄位
+  - 樣式依據使用者設定
+- 畫面更新率：**30 FPS**（可調整）
+- 使用 **FFmpeg.wasm** 執行影片合成
+- 支援品質與解析度設定
+- 提供匯出進度顯示
+- 完成後自動下載結果影片
 
 ## 🧱 前端技術架構
 
-| 類別           | 技術                                                        |
-| -------------- | ----------------------------------------------------------- |
-| **前端框架**   | **Vue 3 (Composition API)**                                 |
-| **UI 元件庫**  | **Vuetify 3**                                               |
-| **圖表套件**   | **Chart.js 或 ECharts**                                     |
-| **動畫生成**   | **Canvas + CCapture.js**                                    |
-| **影片合成**   | **FFmpeg.wasm**                                             |
-| **檔案上傳**   | **HTML5 Drag & Drop API**                                   |
-| **多語言支援** | **vue-i18n (v9)**                                           |
-| **架構類型**   | **SPA（Single Page Application）**                          |
-| **單元測試**   | **Vitest + @vue/test-utils + @testing-library/vue + jsdom** |
+| 類別           | 技術                               |
+| -------------- | ---------------------------------- |
+| **前端框架**   | **Vue 3 (Composition API)**        |
+| **UI 元件庫**  | **Vuetify 3**                      |
+| **圖表套件**   | **Chart.js + vue-chartjs**         |
+| **影片合成**   | **FFmpeg.wasm**                    |
+| **檔案上傳**   | **HTML5 Drag & Drop API**          |
+| **狀態管理**   | **Pinia**                          |
+| **路由**       | **Vue Router**                     |
+| **多語言支援** | **vue-i18n (v9)**                  |
+| **架構類型**   | **SPA（Single Page Application）** |
+| **單元測試**   | **Vitest + @vue/test-utils**       |
+| **E2E 測試**   | **Playwright**                     |
+| **建置工具**   | **Vite**                           |
 
 ## 🌐 多語言支援（i18n）
 
@@ -123,57 +123,175 @@
    - 所有 UI 文字、按鈕、訊息提示均已翻譯
    - 包含錯誤訊息、表單標籤、圖表標題等
 
-### 語言檔案結構
+## 🎨 主題系統
+
+- **自動主題偵測**：根據系統偏好自動切換深色/淺色主題
+- **手動切換**：支援使用者手動切換主題
+- **持久化儲存**：主題設定儲存在 `localStorage`
+- **Vuetify 整合**：與 Vuetify 主題系統完美整合
+
+## 📁 專案結構
 
 ```
-src/
-└── locales/
-    ├── zh-TW.json    # 繁體中文翻譯
-    └── en-US.json    # 英文翻譯
+dive-log-overlay-tool/
+├── src/
+│   ├── components/
+│   │   ├── common/           # 通用元件
+│   │   │   ├── HeaderBar.vue
+│   │   │   └── FooterBar.vue
+│   │   └── pages/            # 頁面元件
+│   │       ├── UploadSection.vue
+│   │       ├── DiveLogUploader.vue
+│   │       ├── VideoUploader.vue
+│   │       ├── Workspace.vue
+│   │       ├── DiveChart.vue
+│   │       ├── VideoPlayer.vue
+│   │       ├── SyncTimeline.vue
+│   │       ├── OverlaySettings.vue
+│   │       ├── OverlayPreview.vue
+│   │       └── ExportDialog.vue
+│   ├── stores/               # Pinia stores
+│   │   ├── diveDataStore.js
+│   │   ├── videoStore.js
+│   │   ├── syncStore.js
+│   │   ├── overlayStore.js
+│   │   ├── exportStore.js
+│   │   └── themeStore.js
+│   ├── utils/                # 工具函式
+│   │   └── uddfParser.js
+│   ├── locales/              # 多語言檔案
+│   │   ├── zh-TW.json
+│   │   └── en-US.json
+│   ├── plugins/              # Vue plugins
+│   │   ├── vuetify.js
+│   │   └── i18n.js
+│   ├── router/               # 路由設定
+│   │   └── index.js
+│   ├── __tests__/            # 測試檔案
+│   │   ├── uddfParser.spec.js
+│   │   └── App.spec.js
+│   ├── App.vue
+│   └── main.js
+├── public/                   # 靜態資源
+│   ├── atmos.uddf            # 範例 UDDF 檔案
+│   └── LongDong.MP4          # 範例影片
+├── e2e/                      # E2E 測試
+│   └── vue.spec.js
+└── package.json
 ```
 
-## 🧩 Component 結構設計
+## 🔧 快速開始
 
-```scss
-App.vue (頂層組件)
-├── HeaderBar.vue (輔助組件)
-├── FooterBar.vue (輔助組件)
-├── UploadSection.vue (頁面組件)
-│   ├── DiveLogUploader.vue (子組件)
-│   │     └─ emits: 'diveDataUploaded' → UploadSection
-│   └── VideoUploader.vue (子組件)
-│         └─ emits: 'videoUploaded' → UploadSection
-│
-├── Workspace.vue (頁面組件)
-│   ├── Props:
-│   │     diveData ← UploadSection
-│   │     videoFile ← UploadSection
-│   │
-│   ├── DiveChart.vue (子組件)
-│   │     Props: diveData
-│   │     Emits: 'timeSelected' → Workspace
-│   │
-│   ├── VideoPlayer.vue (子組件)
-│   │     Props: videoFile, currentTime
-│   │     Emits: 'timeUpdated' → Workspace
-│   │
-│   └── SyncTimeline.vue (子組件)
-│         Props: diveData, videoDuration, currentOffset
-│         Emits: 'offsetChanged' → Workspace
-│
-└── ExportDialog.vue (輔助組件)
-      Props: diveData, videoFile, overlayOptions
-      Emits: 'exportStarted', 'exportFinished' → App.vue
+### 安裝依賴
+
+```bash
+npm install
 ```
 
-### 🔹 資料流說明
+### 開發模式
 
-1. **UploadSection → Workspace**
-   - 上傳完成後，潛水紀錄 `diveData` 與影片 `videoFile` 傳給 Workspace。
-2. **Workspace ↔ 子組件**
-   - DiveChart: 顯示曲線圖，可發出 `timeSelected` 事件給 Workspace（用於滑動選點或同步）
-   - VideoPlayer: 播放影片，可發出 `timeUpdated` 事件，Workspace 接收後更新 SyncTimeline
-   - SyncTimeline: 調整影片與紀錄的 offset，發出 `offsetChanged` 給 Workspace，Workspace 再同步 DiveChart 與 VideoPlayer
-3. **ExportDialog**
-   - Workspace 或 App 傳入資料與 overlay 設定
-   - ExportDialog 執行匯出，完成後透過事件通知 App
+```bash
+npm run dev
+```
+
+專案會在 `http://localhost:8080` 啟動
+
+### 建置生產版本
+
+```bash
+npm run build
+```
+
+### 預覽生產版本
+
+```bash
+npm run preview
+```
+
+### 執行測試
+
+```bash
+# 單元測試
+npm run test:unit
+
+# E2E 測試
+npm run test:e2e
+```
+
+### 程式碼檢查與格式化
+
+```bash
+# ESLint 檢查與修復
+npm run lint
+
+# Prettier 格式化
+npm run format
+```
+
+## 🔧 開發注意事項
+
+### FFmpeg.wasm 設定
+
+專案使用 FFmpeg.wasm 進行影片合成，需要：
+
+1. **CORS Headers**：開發伺服器已設定必要的 CORS headers
+
+   ```javascript
+   // vite.config.js
+   server: {
+     headers: {
+       'Cross-Origin-Embedder-Policy': 'require-corp',
+       'Cross-Origin-Opener-Policy': 'same-origin',
+     },
+   }
+   ```
+
+2. **靜態檔案**：FFmpeg.wasm 核心檔案會自動從 CDN 載入
+
+### 單位說明
+
+- **深度**：公尺 (m)
+- **溫度**：攝氏度 (°C) - UDDF 原始格式為 Kelvin，會自動轉換
+- **速度**：公尺/秒 (m/s)
+- **時間**：秒 (s) 或 MM:SS 格式
+- **日期**：ISO 8601 (YYYY-MM-DD)
+
+## 🧩 Component 結構與資料流
+
+```
+App.vue
+├── HeaderBar.vue
+├── FooterBar.vue
+├── UploadSection.vue
+│   ├── DiveLogUploader.vue → diveDataStore
+│   └── VideoUploader.vue → videoStore
+└── Workspace.vue
+    ├── DiveChart.vue ← diveDataStore
+    ├── OverlayPreview (包覆 VideoPlayer)
+    │   └── VideoPlayer.vue ← videoStore, syncStore
+    ├── SyncTimeline.vue ↔ syncStore
+    ├── OverlaySettings.vue ↔ overlayStore
+    └── ExportDialog.vue ← 所有 stores
+```
+
+### 資料流說明
+
+1. **檔案上傳**：
+   - `DiveLogUploader` → `diveDataStore`
+   - `VideoUploader` → `videoStore`
+
+2. **時間軸同步**：
+   - `SyncTimeline` ↔ `syncStore`
+   - `VideoPlayer` 發出時間更新 → `syncStore.updateCurrentTime()`
+
+3. **覆蓋層預覽**：
+   - `OverlayPreview` 監聽 `syncStore.currentVideoTime` 和 `overlayStore.previewMode`
+   - 即時計算並顯示對應的潛水數據
+
+4. **影片匯出**：
+   - `ExportDialog` 整合所有 stores 的數據
+   - 使用 `exportStore` 管理匯出流程
+
+## 📝 授權
+
+MIT License - 詳見 [LICENSE](LICENSE) 檔案
