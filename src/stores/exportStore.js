@@ -57,8 +57,9 @@ export const useExportStore = defineStore('export', () => {
       // Load FFmpeg with local files from the public directory
       loadingProgress.value = 10
       await ffmpegInstance.load({
-        coreURL: await toBlobURL('/ffmpeg.wasm/core/dist/esm/ffmpeg-core.js', 'text/javascript'),
-        wasmURL: await toBlobURL('/ffmpeg.wasm/core/dist/esm/ffmpeg-core.wasm', 'application/wasm'),
+        coreURL: '/ffmpeg.wasm/core/dist/esm/ffmpeg-core.js',
+        wasmURL: '/ffmpeg.wasm/core/dist/esm/ffmpeg-core.wasm',
+        classWorkerURL: '/ffmpeg.wasm/ffmpeg/dist/esm/worker.js',
       })
 
       isLoaded.value = true
